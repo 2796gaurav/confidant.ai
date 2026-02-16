@@ -4,7 +4,7 @@
 
 <img src="docs/assets/logo.svg" alt="Confidant AI Logo" width="200" height="200">
 
-*Logo matches the actual app icon*
+
 
 **Your Privacy-First AI Companion**
 

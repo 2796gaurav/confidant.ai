@@ -33,6 +33,7 @@ fun SettingsScreenRedesigned(
     onNavigateToDataViewer: () -> Unit = {}
 ) {
     val app = ConfidantApplication.instance
+    val context = androidx.compose.ui.platform.LocalContext.current
     val scope = rememberCoroutineScope()
     
     var telegramToken by remember { mutableStateOf("") }
@@ -238,7 +239,7 @@ fun SettingsScreenRedesigned(
                             val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                                 data = android.net.Uri.parse("https://github.com/2796gaurav/confidant.ai")
                             }
-                            androidx.compose.ui.platform.LocalContext.current.startActivity(intent)
+                            context.startActivity(intent)
                         }
                     )
                     Divider(color = MidnightMain, thickness = 1.dp)
@@ -250,7 +251,7 @@ fun SettingsScreenRedesigned(
                             val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                                 data = android.net.Uri.parse("http://2796gaurav.github.io/confidantai")
                             }
-                            androidx.compose.ui.platform.LocalContext.current.startActivity(intent)
+                            context.startActivity(intent)
                         }
                     )
                     Divider(color = MidnightMain, thickness = 1.dp)

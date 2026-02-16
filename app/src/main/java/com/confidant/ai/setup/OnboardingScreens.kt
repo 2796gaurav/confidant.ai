@@ -84,7 +84,7 @@ fun WelcomeScreen(onNext: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
         
         FeatureCard(
-            icon = Icons.Default.Telegram,
+            icon = Icons.Default.Chat,
             title = "Telegram Integration",
             description = "Chat with your AI companion through Telegram. Get instant responses and proactive notifications."
         )
