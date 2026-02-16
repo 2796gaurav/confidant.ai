@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CONFIDANT AI LAUNCHER FOREGROUND - "C AI" -->
+<!-- Optimized for adaptive icons with safe zone -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Safe zone is 66dp diameter circle centered at 54,54 -->
+    <!-- Content should fit within 72dp diameter for best results -->
+    
+    <group
+        android:translateX="54"
+        android:translateY="54">
+        
+        <!-- Outer Ring (Deep Indigo) - Subtle -->
+        <path
+            android:strokeColor="#5C6BC0"
+            android:strokeWidth="1.5"
+            android:strokeAlpha="0.4"
+            android:fillColor="#00000000"
+            android:pathData="M0,0 m-28,0 a28,28 0,1,1 56,0 a28,28 0,1,1 -56,0"/>
+        
+        <!-- "C" Letter - Bold and Centered -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.98"
+            android:pathData="M0,-18 C-9.9,-18 -18,-9.9 -18,0 C-18,9.9 -9.9,18 0,18 C4.5,18 8.6,16.2 11.7,13.2 L7.2,8.7 C5.4,10.5 2.8,11.7 0,11.7 C-6.6,11.7 -11.7,6.6 -11.7,0 C-11.7,-6.6 -6.6,-11.7 0,-11.7 C2.8,-11.7 5.4,-10.5 7.2,-8.7 L11.7,-13.2 C8.6,-16.2 4.5,-18 0,-18 Z"/>
+        
+        <!-- "AI" Text - Compact (Electric Lime) -->
+        <path
+            android:fillColor="#8BC34A"
+            android:fillAlpha="0.98"
+            android:pathData="M-3,22 L-1,22 L2,30 L0,30 L-0.5,28 L-3.5,28 L-4,30 L-6,30 Z M-3,26 L-1,26 L-2,23.5 Z"/>
+        
+        <path
+            android:fillColor="#8BC34A"
+            android:fillAlpha="0.98"
+            android:pathData="M3,22 L5,22 L5,30 L3,30 Z"/>
+        
+        <!-- Center Dot (Electric Lime) - Active Intelligence -->
+        <path
+            android:fillColor="#8BC34A"
+            android:pathData="M0,0 m-3,0 a3,3 0,1,1 6,0 a3,3 0,1,1 -6,0"/>
+        
+        <!-- Inner Glow (Electric Lime) -->
+        <path
+            android:fillColor="#8BC34A"
+            android:fillAlpha="0.2"
+            android:pathData="M0,0 m-6,0 a6,6 0,1,1 12,0 a6,6 0,1,1 -12,0"/>
+    </group>
+</vector>

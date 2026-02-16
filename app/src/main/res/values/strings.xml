@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Confidant AI</string>
+    
+    <!-- General -->
+    <string name="app_tagline">Your Personal AI Companion</string>
+    <string name="continue_button">Continue</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="loading">Loading…</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="system_status">System Status</string>
+    <string name="memory">Memory</string>
+    <string name="thermal">Thermal</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Thermal -->
+    <string name="thermal_status">Thermal Status</string>
+    <string name="temperature">Temperature</string>
+    <string name="thermal_nominal">Normal</string>
+    <string name="thermal_light">Warm</string>
+    <string name="thermal_moderate">Hot</string>
+    <string name="thermal_severe">Very Hot</string>
+    <string name="thermal_critical">Critical</string>
+    
+    <!-- Memory -->
+    <string name="memory_title">Memory</string>
+    <string name="recall_memories">Recall Memories</string>
+    <string name="core_facts">Core Facts</string>
+    <string name="context_tokens">Context Tokens</string>
+    <string name="no_memories">No memories yet</string>
+    <string name="consolidate">Consolidate</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="telegram_bot">Telegram Bot</string>
+    <string name="bot_token">Bot Token</string>
+    <string name="your_profile">Your Profile</string>
+    <string name="your_name">Your Name</string>
+    <string name="features">Features</string>
+    <string name="proactive_messages">Proactive Messages</string>
+    <string name="notification_capture">Notification Capture</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="model">Model</string>
+    
+    <!-- Setup -->
+    <string name="welcome_title">Welcome to Confidant AI</string>
+    <string name="welcome_description">Your personal AI companion that learns about your life and helps you stay on top of things.</string>
+    <string name="get_started">Get Started</string>
+    <string name="permissions_title">Required Permissions</string>
+    <string name="notification_access">Notification Access</string>
+    <string name="notification_access_desc">To learn about your life and provide personalized assistance</string>
+    <string name="battery_optimization">Battery Optimization</string>
+    <string name="battery_optimization_desc">To keep running in the background for continuous learning</string>
+    <string name="grant">Grant</string>
+    <string name="telegram_setup_title">Connect Telegram</string>
+    <string name="telegram_setup_desc">Chat with your AI companion through Telegram. Get a free bot token from @BotFather.</string>
+    <string name="connect">Connect</string>
+    <string name="skip">Skip</string>
+    <string name="complete_title">You\'re All Set!</string>
+    <string name="complete_description">Confidant AI is now learning about your life. Chat with it on Telegram or check back here for insights.</string>
+    <string name="start_using">Start Using Confidant</string>
+    
+    <!-- Notifications -->
+    <string name="notification_channel_service">Confidant AI Service</string>
+    <string name="notification_channel_proactive">Proactive Messages</string>
+    <string name="notification_channel_alerts">Important Alerts</string>
+    <string name="notification_channel_thermal">Thermal Monitoring</string>
+    
+    <!-- Service -->
+    <string name="service_running">Confidant AI is running</string>
+    <string name="thermal_monitoring">Thermal monitoring active</string>
+</resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CONFIDANT AI LOGO - "C AI" SIMPLE & POWERFUL -->
+<!-- Centered text-based logo with theme colors -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    
+    <!-- Background Glow (Deep Indigo) -->
+    <path
+        android:fillColor="#3949AB"
+        android:fillAlpha="0.08"
+        android:pathData="M144,144 m-120,0 a120,120 0,1,1 240,0 a120,120 0,1,1 -240,0"/>
+    
+    <!-- Outer Ring (Deep Indigo) -->
+    <path
+        android:strokeColor="#3949AB"
+        android:strokeWidth="3"
+        android:strokeAlpha="0.6"
+        android:fillColor="#00000000"
+        android:pathData="M144,144 m-100,0 a100,100 0,1,1 200,0 a100,100 0,1,1 -200,0"/>
+    
+    <!-- "C" Letter - Bold and Centered -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.95"
+        android:pathData="M144,70 C110,70 82,98 82,132 C82,166 110,194 144,194 C160,194 175,188 186,178 L170,162 C163,169 154,173 144,173 C122,173 103,154 103,132 C103,110 122,91 144,91 C154,91 163,95 170,102 L186,86 C175,76 160,70 144,70 Z"/>
+    
+    <!-- "AI" Text - Compact and Modern -->
+    <path
+        android:fillColor="#8BC34A"
+        android:fillAlpha="0.95"
+        android:pathData="M165,210 L172,210 L180,235 L173,235 L171.5,230 L165.5,230 L164,235 L157,235 Z M166.5,225 L170.5,225 L168.5,218 Z"/>
+    
+    <path
+        android:fillColor="#8BC34A"
+        android:fillAlpha="0.95"
+        android:pathData="M185,210 L192,210 L192,235 L185,235 Z"/>
+    
+    <!-- Accent Dot (Electric Lime) - Active Intelligence -->
+    <path
+        android:fillColor="#8BC34A"
+        android:pathData="M144,132 m-8,0 a8,8 0,1,1 16,0 a8,8 0,1,1 -16,0"/>
+    
+    <!-- Inner Glow (Electric Lime) -->
+    <path
+        android:fillColor="#8BC34A"
+        android:fillAlpha="0.15"
+        android:pathData="M144,132 m-20,0 a20,20 0,1,1 40,0 a20,20 0,1,1 -40,0"/>
+</vector>

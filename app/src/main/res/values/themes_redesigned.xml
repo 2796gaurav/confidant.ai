@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- CONFIDANT AI - "MIDNIGHT TRUST" THEME -->
+    <!-- Dark Mode Only - Privacy-First Design Philosophy -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    
+    <style name="Theme.ConfidantAI.Redesigned" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary Colors - Deep Indigo (Trust & Intelligence) -->
+        <item name="colorPrimary">@color/deep_indigo_main</item>
+        <item name="colorOnPrimary">@color/frost_white_primary</item>
+        <item name="colorPrimaryContainer">@color/deep_indigo_dark</item>
+        <item name="colorOnPrimaryContainer">@color/deep_indigo_light</item>
+        
+        <!-- Secondary Colors - Electric Lime (Success & Active) -->
+        <item name="colorSecondary">@color/electric_lime_main</item>
+        <item name="colorOnSecondary">@color/midnight_dark</item>
+        <item name="colorSecondaryContainer">@color/electric_lime_dark</item>
+        <item name="colorOnSecondaryContainer">@color/electric_lime_light</item>
+        
+        <!-- Tertiary Colors - Amber Caution (Warnings) -->
+        <item name="colorTertiary">@color/amber_caution_main</item>
+        <item name="colorOnTertiary">@color/midnight_dark</item>
+        <item name="colorTertiaryContainer">@color/amber_caution_dark</item>
+        <item name="colorOnTertiaryContainer">@color/amber_caution_light</item>
+        
+        <!-- Error Colors - Crimson Alert -->
+        <item name="colorError">@color/crimson_alert_main</item>
+        <item name="colorOnError">@color/frost_white_primary</item>
+        <item name="colorErrorContainer">@color/crimson_alert_dark</item>
+        <item name="colorOnErrorContainer">@color/crimson_alert_light</item>
+        
+        <!-- Background Colors - Midnight -->
+        <item name="android:colorBackground">@color/midnight_main</item>
+        <item name="colorOnBackground">@color/frost_white_secondary</item>
+        
+        <!-- Surface Colors - Midnight Light -->
+        <item name="colorSurface">@color/midnight_light</item>
+        <item name="colorOnSurface">@color/frost_white_secondary</item>
+        <item name="colorSurfaceVariant">@color/midnight_dark</item>
+        <item name="colorOnSurfaceVariant">@color/frost_white_tertiary</item>
+        
+        <!-- Outline Colors -->
+        <item name="colorOutline">@color/frost_white_tertiary</item>
+        <item name="colorOutlineVariant">@color/midnight_light</item>
+        
+        <!-- Status Bar - Midnight Dark for immersive experience -->
+        <item name="android:statusBarColor">@color/midnight_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Navigation Bar - Midnight Dark -->
+        <item name="android:navigationBarColor">@color/midnight_dark</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        
+        <!-- Typography -->
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.ConfidantAI.H1</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.ConfidantAI.H2</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.ConfidantAI.H3</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.ConfidantAI.Body</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.ConfidantAI.Caption</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.ConfidantAI.Button</item>
+        
+        <!-- Shape System -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.ConfidantAI.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.ConfidantAI.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.ConfidantAI.LargeComponent</item>
+    </style>
+    
+    <!-- Typography Styles -->
+    <style name="TextAppearance.ConfidantAI.H1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/frost_white_primary</item>
+        <item name="android:letterSpacing">-0.005</item>
+    </style>
+    
+    <style name="TextAppearance.ConfidantAI.H2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/frost_white_secondary</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    
+    <style name="TextAppearance.ConfidantAI.H3" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/frost_white_secondary</item>
+    </style>
+    
+    <style name="TextAppearance.ConfidantAI.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/frost_white_secondary</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+    
+    <style name="TextAppearance.ConfidantAI.Caption" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/frost_white_tertiary</item>
+    </style>
+    
+    <style name="TextAppearance.ConfidantAI.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/frost_white_primary</item>
+        <item name="android:letterSpacing">0.0125</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+    
+    <!-- Shape Styles -->
+    <style name="ShapeAppearance.ConfidantAI.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    
+    <style name="ShapeAppearance.ConfidantAI.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    
+    <style name="ShapeAppearance.ConfidantAI.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+    
+    <!-- Splash Screen Theme -->
+    <style name="Theme.ConfidantAI.Redesigned.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/midnight_main</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+        <item name="postSplashScreenTheme">@style/Theme.ConfidantAI.Redesigned</item>
+    </style>
+</resources>

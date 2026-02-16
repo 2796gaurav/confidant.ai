@@ -1,0 +1,35 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#673AB7" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#673AB7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dotGlow" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#00E676" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#00E676" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Background Glow -->
+  <circle cx="100" cy="100" r="100" fill="url(#bgGlow)"/>
+  
+  <!-- Outer Ring (Deep Indigo) -->
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#673AB7" stroke-width="2.5" stroke-opacity="0.6"/>
+  
+  <!-- "C" Letter - Bold with visible gap -->
+  <path d="M 100,30 
+           A 50,50 0 0,1 100,170
+           L 100,150
+           A 30,30 0 0,0 100,50
+           L 100,30 Z" 
+        fill="#FFFFFF" fill-opacity="0.95"/>
+  
+  <!-- "AI" Text (Electric Lime) -->
+  <text x="100" y="156" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="24" font-weight="bold" fill="#00E676" text-anchor="middle" opacity="0.95">AI</text>
+  
+  <!-- Center Dot Glow -->
+  <circle cx="100" cy="100" r="12" fill="url(#dotGlow)"/>
+  
+  <!-- Center Dot (Electric Lime) -->
+  <circle cx="100" cy="100" r="4" fill="#00E676" opacity="0.9"/>
+</svg>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- CONFIDANT AI - "MIDNIGHT TRUST" COLOR SYSTEM -->
+    <!-- Privacy-First, Dark Mode Only, WCAG AAA Compliant -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    
+    <!-- PRIMARY COLORS - Deep Indigo (Trust, Intelligence, Calm) -->
+    <color name="deep_indigo_light">#5C6BC0</color>
+    <color name="deep_indigo_main">#3949AB</color>
+    <color name="deep_indigo_dark">#283593</color>
+    
+    <!-- MIDNIGHT BACKGROUND (Surface) - Privacy, Depth, Modern -->
+    <color name="midnight_light">#1E2228</color>
+    <color name="midnight_main">#131720</color>
+    <color name="midnight_dark">#0B0E14</color>
+    
+    <!-- ELECTRIC LIME (Success/Active) - Growth, Vitality, Positive -->
+    <color name="electric_lime_light">#AED581</color>
+    <color name="electric_lime_main">#8BC34A</color>
+    <color name="electric_lime_dark">#689F38</color>
+    
+    <!-- CRIMSON ALERT (Error/Warning) - Urgency, Attention, Caution -->
+    <color name="crimson_alert_light">#EF5350</color>
+    <color name="crimson_alert_main">#F44336</color>
+    <color name="crimson_alert_dark">#C62828</color>
+    
+    <!-- AMBER CAUTION (Medium Priority) - Attention without Alarm -->
+    <color name="amber_caution_light">#FFB74D</color>
+    <color name="amber_caution_main">#FF9800</color>
+    <color name="amber_caution_dark">#F57C00</color>
+    
+    <!-- FROST WHITE (Text/Icons) - High Contrast -->
+    <color name="frost_white_primary">#FFFFFF</color>
+    <color name="frost_white_secondary">#E0E0E0</color>
+    <color name="frost_white_tertiary">#9E9E9E</color>
+    
+    <!-- SEMANTIC COLORS - System Status -->
+    <color name="system_healthy">#4CAF50</color>
+    <color name="system_warning">#FF9800</color>
+    <color name="system_critical">#F44336</color>
+    <color name="system_info">#2196F3</color>
+    <color name="system_offline">#607D8B</color>
+    
+    <!-- FUNCTIONAL COLORS -->
+    <color name="data_analytics">#00BCD4</color>
+    <color name="privacy_security">#673AB7</color>
+    <color name="ai_processing">#9C27B0</color>
+    <color name="communication">#3F51B5</color>
+    
+    <!-- THERMAL STATE COLORS (Optimized for Colorblind) -->
+    <color name="thermal_nominal">#4CAF50</color>
+    <color name="thermal_light">#2196F3</color>
+    <color name="thermal_moderate">#FF9800</color>
+    <color name="thermal_severe">#FF6B6B</color>
+    <color name="thermal_critical">#C62828</color>
+    
+    <!-- MEMORY CATEGORY COLORS -->
+    <color name="category_social">#2196F3</color>
+    <color name="category_finance">#4CAF50</color>
+    <color name="category_health">#EC4899</color>
+    <color name="category_work">#9C27B0</color>
+    <color name="category_general">#8B5CF6</color>
+</resources>
