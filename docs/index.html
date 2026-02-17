@@ -3,1230 +3,895 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Confidant AI — 100% On-Device AI Assistant. Privacy-first. No cloud. Complete control.">
-<title>Confidant AI — Privacy-First AI Companion</title>
+<meta name="description" content="Confidant AI — 100% On-Device AI Assistant. Privacy-first. No cloud. Your data never leaves your phone.">
+<title>Confidant AI — On-Device AI Companion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="demo.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --c-bg: #070B1E;
-  --c-surface: #0F1630;
-  --c-surface2: #161D38;
-  --c-purple: #673AB7;
-  --c-purple-light: #8B5CF6;
-  --c-purple-dim: #3D2372;
-  --c-green: #00E676;
-  --c-green-dim: #00C853;
-  --c-white: #F0EDE8;
-  --c-muted: #6B7280;
-  --c-border: rgba(103,58,183,0.25);
-  --c-border-light: rgba(240,237,232,0.08);
+  --ink:     #0A1628;
+  --ink-2:   #3D4F6A;
+  --ink-3:   #8996A8;
+  --blue:    #1A6EFF;
+  --blue-2:  #0D4FBB;
+  --blue-bg: #EEF4FF;
+  --green:   #10B981;
+  --green-bg:#ECFDF5;
+  --red:     #EF4444;
+  --surface: #F7F8FA;
+  --surface2:#EDEEF2;
+  --border:  #E2E4EA;
+  --white:   #FFFFFF;
+  --tg-blue: #2AABEE;
+  --tg-bg:   #F0F2F5;
+  --radius:  10px;
+  --serif:   'Fraunces', Georgia, serif;
+  --sans:    'IBM Plex Sans', sans-serif;
+  --mono:    'IBM Plex Mono', monospace;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+body { font-family: var(--sans); background: var(--white); color: var(--ink); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Syne', sans-serif;
-  background: var(--c-bg);
-  color: var(--c-white);
-  overflow-x: hidden;
+/* ─── SCROLL PROGRESS ─── */
+#prog {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0%; z-index: 9999;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transition: width .08s linear;
 }
 
-::selection { background: var(--c-purple); color: #fff; }
-
-/* NOISE OVERLAY */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.4;
-}
-
-/* SCROLL PROGRESS */
-#sp {
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  width: 0%;
-  background: linear-gradient(90deg, var(--c-purple), var(--c-green));
-  z-index: 10000;
-  transition: width 0.1s linear;
-}
-
-/* NAV */
+/* ─── NAV ─── */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-  padding: 1.25rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(20px);
-  background: rgba(7,11,30,0.8);
-  border-bottom: 1px solid var(--c-border);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .7rem 2.5rem;
 }
-
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-  color: var(--c-white);
+.nav-logo {
+  display: flex; align-items: center; gap: .6rem;
+  text-decoration: none; color: var(--ink);
 }
-
-.nav-brand-icon {
-  width: 34px; height: 34px;
-  background: var(--c-purple);
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
+.nav-icon {
+  width: 30px; height: 30px; background: var(--ink); border-radius: 7px;
+  display: grid; place-items: center; flex-shrink: 0;
 }
-
-.nav-brand-name {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.25rem;
-  letter-spacing: -0.01em;
+.nav-name { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; letter-spacing: -.01em; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { text-decoration: none; color: var(--ink-2); font-size: .78rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; transition: color .2s; }
+.nav-links a:hover { color: var(--blue); }
+.nav-dl {
+  font-family: var(--mono); font-size: .72rem; font-weight: 500;
+  background: var(--ink); color: var(--white); text-decoration: none;
+  padding: .45rem 1.1rem; border-radius: 6px; letter-spacing: .03em;
+  transition: background .2s, transform .15s;
 }
+.nav-dl:hover { background: var(--blue); transform: translateY(-1px); }
 
-.nav-links {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--c-muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover { color: var(--c-white); }
-
-.nav-cta {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  color: var(--c-green);
-  border: 1px solid var(--c-green);
-  padding: 0.5rem 1.25rem;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-}
-
-.nav-cta:hover {
-  background: var(--c-green);
-  color: var(--c-bg);
-}
-
-/* ========== HERO ========== */
+/* ─── HERO ─── */
 .hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 9rem 3rem 6rem;
-  position: relative;
-  overflow: hidden;
+  min-height: calc(100vh - 52px);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; overflow: hidden;
 }
 
-.hero-grid-bg {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(103,58,183,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(103,58,183,0.07) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 100%);
+/* LEFT — Info */
+.hero-info {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 4rem 3rem 4rem 2.5rem;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
 }
-
-.hero-glow {
-  position: absolute;
-  top: -200px; left: 50%;
-  transform: translateX(-50%);
-  width: 800px; height: 600px;
-  background: radial-gradient(ellipse, rgba(103,58,183,0.18) 0%, transparent 70%);
+.hero-info::before {
+  content: '';
+  position: absolute; top: -120px; left: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(26,110,255,.07) 0%, transparent 70%);
   pointer-events: none;
 }
-
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-  opacity: 0;
-  animation: fadeUp 0.7s 0.1s ease forwards;
+.badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--mono); font-size: .65rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--green); background: var(--green-bg); border: 1px solid rgba(16,185,129,.25);
+  padding: .3rem .75rem; border-radius: 100px;
+  margin-bottom: 1.75rem; width: fit-content;
+  opacity: 0; animation: up .6s .1s ease forwards;
 }
+.badge-dot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; animation: blink 1.8s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-.eyebrow-line {
-  width: 40px; height: 1px;
-  background: var(--c-green);
+.hero-h1 {
+  font-family: var(--serif); font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 600; line-height: .96; letter-spacing: -.04em; color: var(--ink);
+  opacity: 0; animation: up .7s .2s ease forwards;
 }
-
-.eyebrow-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--c-green);
-}
-
-.hero h1 {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(4rem, 9vw, 8.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  max-width: 900px;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.25s ease forwards;
-}
-
-.hero h1 em {
-  font-style: italic;
-  color: var(--c-purple-light);
-}
+.hero-h1 em { font-style: italic; font-weight: 300; color: var(--blue); }
 
 .hero-sub {
-  margin-top: 2.5rem;
-  max-width: 520px;
-  color: var(--c-muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
-  font-weight: 400;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.4s ease forwards;
+  margin-top: 1.5rem; color: var(--ink-2); font-size: .92rem; line-height: 1.75; font-weight: 400; max-width: 420px;
+  opacity: 0; animation: up .7s .35s ease forwards;
 }
 
-.hero-pills {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.55s ease forwards;
+.hero-tags {
+  display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem;
+  opacity: 0; animation: up .7s .45s ease forwards;
 }
-
-.pill {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  padding: 0.35rem 0.85rem;
-  border-radius: 100px;
-  border: 1px solid var(--c-border);
-  color: var(--c-muted);
-  background: var(--c-surface);
+.tag {
+  font-family: var(--mono); font-size: .65rem; letter-spacing: .05em;
+  padding: .28rem .7rem; border-radius: 5px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--ink-2);
 }
-
-.pill.green { border-color: rgba(0,230,118,0.3); color: var(--c-green); background: rgba(0,230,118,0.05); }
+.tag.accent { background: var(--blue-bg); border-color: rgba(26,110,255,.25); color: var(--blue); }
 
 .hero-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 3rem;
-  flex-wrap: wrap;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.7s ease forwards;
+  display: flex; gap: .75rem; margin-top: 2rem; flex-wrap: wrap;
+  opacity: 0; animation: up .7s .55s ease forwards;
 }
-
-.btn-dl {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: var(--c-purple);
-  color: #fff;
-  padding: 0.9rem 2rem;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--blue); color: var(--white);
+  padding: .8rem 1.6rem; border-radius: 7px;
+  text-decoration: none; font-weight: 600; font-size: .85rem; letter-spacing: .02em;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 2px 16px rgba(26,110,255,.3);
 }
-
-.btn-dl:hover {
-  background: var(--c-purple-light);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(103,58,183,0.4);
+.btn-primary:hover { background: var(--blue-2); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(26,110,255,.4); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: .5rem;
+  color: var(--ink); background: var(--white);
+  padding: .8rem 1.6rem; border-radius: 7px; border: 1px solid var(--border);
+  text-decoration: none; font-weight: 500; font-size: .85rem; letter-spacing: .02em;
+  transition: border-color .2s, background .2s, transform .15s;
 }
-
-.btn-gh {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: var(--c-white);
-  padding: 0.9rem 2rem;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  border: 1px solid var(--c-border-light);
-  transition: border-color 0.2s, transform 0.2s;
-}
-
-.btn-gh:hover {
-  border-color: rgba(240,237,232,0.25);
-  transform: translateY(-2px);
-}
+.btn-ghost:hover { border-color: var(--ink); background: var(--surface); transform: translateY(-2px); }
 
 .hero-stats {
-  position: absolute;
-  bottom: 3rem; right: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.9s ease forwards;
+  display: flex; gap: 2.5rem; margin-top: 2.5rem; padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  opacity: 0; animation: up .7s .7s ease forwards;
 }
+.stat-val { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; line-height: 1; color: var(--ink); letter-spacing: -.03em; }
+.stat-key { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: .25rem; }
 
-.hero-stat {
-  text-align: right;
+/* RIGHT — Telegram Chat */
+.hero-chat-wrap {
+  background: var(--tg-bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 2rem 2rem 1.5rem;
+  position: relative; overflow: hidden;
 }
-
-.stat-num {
-  font-family: 'DM Serif Display', serif;
-  font-size: 2rem;
-  color: var(--c-white);
-  line-height: 1;
-}
-
-.stat-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: var(--c-muted);
-  text-transform: uppercase;
-}
-
-/* ========== SECTION BASICS ========== */
-section { position: relative; }
-
-.section-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 3rem;
-}
-
-.section-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 3rem;
-  padding: 6rem 0 4rem;
-  border-top: 1px solid var(--c-border);
-}
-
-.section-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--c-purple-light);
-  letter-spacing: 0.15em;
-  padding-top: 0.5rem;
-  flex-shrink: 0;
-  width: 60px;
-}
-
-.section-title-block { flex: 1; }
-
-.section-kicker {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--c-green);
-  margin-bottom: 0.75rem;
-}
-
-.section-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(2.2rem, 4vw, 3.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.section-desc {
-  margin-top: 1rem;
-  color: var(--c-muted);
-  font-size: 0.95rem;
-  line-height: 1.8;
-  max-width: 460px;
-}
-
-/* ========== FEATURES ========== */
-#features { background: var(--c-bg); }
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--c-border);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 6rem;
-}
-
-.feat {
-  padding: 2rem;
-  border-right: 1px solid var(--c-border);
-  border-bottom: 1px solid var(--c-border);
-  transition: background 0.3s;
-  position: relative;
-}
-
-.feat:nth-child(4n) { border-right: none; }
-.feat:nth-child(5), .feat:nth-child(6), .feat:nth-child(7), .feat:nth-child(8) { border-bottom: none; }
-
-.feat:hover { background: var(--c-surface); }
-
-.feat-icon {
-  width: 40px; height: 40px;
-  border-radius: 8px;
-  border: 1px solid var(--c-border);
-  display: grid;
-  place-items: center;
-  margin-bottom: 1.25rem;
-  background: var(--c-surface);
-  transition: border-color 0.3s, background 0.3s;
-}
-
-.feat:hover .feat-icon {
-  border-color: var(--c-purple);
-  background: var(--c-purple-dim);
-}
-
-.feat-icon svg { width: 20px; height: 20px; }
-
-.feat-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.01em;
-}
-
-.feat-desc {
-  font-size: 0.8rem;
-  color: var(--c-muted);
-  line-height: 1.7;
-  font-weight: 400;
-}
-
-.feat-tag {
-  position: absolute;
-  top: 1rem; right: 1rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  color: var(--c-green);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.feat:hover .feat-tag { opacity: 1; }
-
-/* ========== HOW IT WORKS ========== */
-#how-it-works { background: var(--c-surface); }
-
-.steps-track {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  margin-bottom: 6rem;
-  position: relative;
-}
-
-.steps-track::before {
+.hero-chat-wrap::before {
   content: '';
-  position: absolute;
-  top: 28px;
-  left: calc(12.5% + 14px);
-  right: calc(12.5% + 14px);
-  height: 1px;
-  background: linear-gradient(90deg, var(--c-purple), var(--c-purple-light), var(--c-green));
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(42,171,238,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42,171,238,.04) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-.step-item {
-  padding: 0 1.5rem;
-  text-align: center;
+/* Phone mockup */
+.phone {
+  width: 310px; max-width: 100%;
+  background: var(--white); border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(10,22,40,.18), 0 4px 16px rgba(10,22,40,.1);
+  overflow: hidden; position: relative; z-index: 2;
+  opacity: 0; animation: phoneIn .9s .3s ease forwards;
+}
+@keyframes phoneIn {
+  from { opacity:0; transform: translateY(20px) scale(.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
 }
 
-.step-dot {
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: var(--c-surface2);
-  border: 2px solid var(--c-purple);
-  display: grid;
-  place-items: center;
-  margin: 0 auto 1.5rem;
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.3rem;
-  color: var(--c-purple-light);
+/* TG Header */
+.tg-header {
+  background: var(--tg-blue);
+  padding: .85rem 1rem;
+  display: flex; align-items: center; gap: .7rem;
+}
+.tg-back { color: rgba(255,255,255,.85); display: grid; place-items: center; }
+.tg-back svg { width: 18px; height: 18px; }
+.tg-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.tg-avatar svg { width: 18px; height: 18px; color: white; }
+.tg-info { flex: 1; }
+.tg-bot-name { font-size: .85rem; font-weight: 600; color: white; }
+.tg-bot-status { font-size: .67rem; color: rgba(255,255,255,.75); }
+.tg-actions { display: flex; gap: .5rem; color: rgba(255,255,255,.85); }
+.tg-actions svg { width: 18px; height: 18px; }
+
+/* Chat area */
+.tg-messages {
+  padding: 1rem .875rem;
+  background: var(--tg-bg);
+  display: flex; flex-direction: column; gap: .6rem;
+  min-height: 340px;
   position: relative;
-  z-index: 2;
-  transition: background 0.3s, border-color 0.3s;
+}
+.tg-date-sep {
+  text-align: center; font-size: .65rem; color: var(--ink-3);
+  background: rgba(42,171,238,.1); border-radius: 100px;
+  padding: .2rem .75rem; width: fit-content; margin: .25rem auto;
+  font-family: var(--mono);
+}
+.bubble {
+  max-width: 82%; padding: .55rem .875rem; border-radius: 14px;
+  font-size: .82rem; line-height: 1.5; position: relative;
+  word-wrap: break-word;
+}
+.bubble-time { font-size: .6rem; color: rgba(0,0,0,.35); margin-top: .2rem; display: block; }
+.bubble.in {
+  background: var(--white); color: var(--ink);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.bubble.out {
+  background: #C8E6FA; color: var(--ink);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.bubble.in .bubble-time { text-align: left; }
+.bubble.out .bubble-time { text-align: right; color: rgba(26,110,255,.5); }
+.bubble strong { font-weight: 600; color: var(--blue); font-size: .78rem; display: block; margin-bottom: .25rem; }
+.bubble .tg-tick { display: inline-flex; align-items: center; gap: .1rem; vertical-align: middle; }
+.bubble .tg-tick svg { width: 13px; height: 13px; color: #29B6F6; }
+.typing-indicator {
+  display: flex; align-items: center; gap: .3rem;
+  background: var(--white); border-radius: 14px; border-bottom-left-radius: 4px;
+  padding: .6rem .875rem; align-self: flex-start; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.typing-indicator span {
+  width: 6px; height: 6px; background: var(--ink-3); border-radius: 50%;
+  animation: bounce .9s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: .2s; }
+.typing-indicator span:nth-child(3) { animation-delay: .4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+/* TG Input */
+.tg-input {
+  padding: .65rem .875rem;
+  background: var(--tg-bg);
+  border-top: 1px solid rgba(0,0,0,.07);
+  display: flex; align-items: center; gap: .5rem;
+}
+.tg-input-field {
+  flex: 1; background: var(--white); border: none; border-radius: 20px;
+  padding: .5rem .875rem; font-size: .8rem; color: var(--ink);
+  font-family: var(--sans); outline: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+}
+.tg-send {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--tg-blue); border: none; cursor: pointer;
+  display: grid; place-items: center;
+  transition: background .2s;
+}
+.tg-send:hover { background: #1D9ED9; }
+.tg-send svg { width: 16px; height: 16px; color: white; }
+.tg-emoji { color: var(--ink-3); display: grid; place-items: center; }
+.tg-emoji svg { width: 20px; height: 20px; }
+.tg-attach { color: var(--ink-3); display: grid; place-items: center; }
+.tg-attach svg { width: 20px; height: 20px; }
+
+/* ─── SECTIONS ─── */
+section { position: relative; }
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 2.5rem; }
+
+/* Section label */
+.sec-meta {
+  display: flex; align-items: center; gap: 1rem;
+  padding-bottom: 1.5rem;
+}
+.sec-num {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .15em;
+  color: var(--blue); text-transform: uppercase;
+}
+.sec-line { flex: 1; height: 1px; background: var(--border); }
+.sec-kicker {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .15em;
+  color: var(--ink-3); text-transform: uppercase;
 }
 
-.step-item:hover .step-dot {
-  background: var(--c-purple-dim);
-  border-color: var(--c-purple-light);
+h2.section-h {
+  font-family: var(--serif); font-size: clamp(1.9rem, 3vw, 2.8rem);
+  font-weight: 600; line-height: 1.1; letter-spacing: -.03em; color: var(--ink);
+  margin-bottom: .75rem;
+}
+h2.section-h em { font-style: italic; font-weight: 300; color: var(--blue); }
+.section-sub { color: var(--ink-2); font-size: .9rem; line-height: 1.7; max-width: 480px; font-weight: 400; }
+
+/* ─── FEATURES ─── */
+#features { padding: 5rem 0; background: var(--white); border-top: 1px solid var(--border); }
+.feat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  margin-top: 3rem;
+}
+.feat-card {
+  padding: 1.5rem 1.25rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transition: background .2s;
+  position: relative; overflow: hidden;
+}
+.feat-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--blue-bg); opacity: 0;
+  transition: opacity .25s;
+}
+.feat-card:hover::before { opacity: 1; }
+.feat-card:nth-child(4n) { border-right: none; }
+.feat-card:nth-child(5),.feat-card:nth-child(6),.feat-card:nth-child(7),.feat-card:nth-child(8) { border-bottom: none; }
+.feat-ico {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: grid; place-items: center; margin-bottom: 1rem;
+  position: relative; z-index: 1;
+  transition: background .25s, border-color .25s;
+}
+.feat-card:hover .feat-ico { background: var(--blue); border-color: var(--blue); }
+.feat-ico svg { width: 17px; height: 17px; color: var(--ink-2); transition: color .25s; }
+.feat-card:hover .feat-ico svg { color: white; }
+.feat-name { font-size: .88rem; font-weight: 600; color: var(--ink); margin-bottom: .35rem; position: relative; z-index: 1; }
+.feat-desc { font-size: .76rem; color: var(--ink-2); line-height: 1.6; font-weight: 400; position: relative; z-index: 1; }
+.feat-tag {
+  position: absolute; top: .8rem; right: .8rem;
+  font-family: var(--mono); font-size: .55rem; letter-spacing: .1em;
+  color: var(--blue); background: var(--blue-bg); padding: .15rem .45rem;
+  border-radius: 4px; z-index: 1;
 }
 
-.step-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.01em;
+/* ─── HOW IT WORKS ─── */
+#how { padding: 5rem 0; background: var(--surface); border-top: 1px solid var(--border); }
+.steps-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  position: relative; margin-top: 3rem;
 }
-
-.step-desc {
-  font-size: 0.78rem;
-  color: var(--c-muted);
-  line-height: 1.7;
-  font-weight: 400;
+.steps-grid::before {
+  content: ''; position: absolute; top: 22px; left: calc(12.5% + 10px); right: calc(12.5% + 10px);
+  height: 1px; background: linear-gradient(90deg, var(--blue), var(--green));
 }
-
-/* ========== PRIVACY ========== */
-#privacy { background: var(--c-bg); }
-
-.privacy-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
-  padding-bottom: 6rem;
+.step { padding: 0 1.25rem; text-align: center; }
+.step-n {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--white); border: 1.5px solid var(--blue);
+  display: grid; place-items: center; margin: 0 auto 1.25rem;
+  font-family: var(--mono); font-size: .8rem; font-weight: 500; color: var(--blue);
+  position: relative; z-index: 2;
+  transition: background .2s, color .2s;
+  box-shadow: 0 0 0 4px rgba(26,110,255,.08);
 }
+.step:hover .step-n { background: var(--blue); color: white; }
+.step-t { font-size: .88rem; font-weight: 600; color: var(--ink); margin-bottom: .4rem; }
+.step-d { font-size: .76rem; color: var(--ink-2); line-height: 1.65; font-weight: 400; }
 
-.privacy-left {}
-
-.privacy-statement {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-  margin-bottom: 2rem;
+/* ─── PRIVACY ─── */
+#privacy { padding: 5rem 0; background: var(--white); border-top: 1px solid var(--border); }
+.prv-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 2rem; }
+.prv-quote {
+  font-family: var(--serif); font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-weight: 300; font-style: italic; line-height: 1.45;
+  color: var(--ink); margin-bottom: 1.5rem; letter-spacing: -.02em;
 }
+.prv-quote strong { font-weight: 600; font-style: normal; color: var(--green); }
+.prv-body { color: var(--ink-2); font-size: .87rem; line-height: 1.85; font-weight: 400; }
 
-.privacy-statement em {
-  font-style: italic;
-  color: var(--c-green);
-}
-
-.privacy-body {
-  color: var(--c-muted);
-  font-size: 0.9rem;
-  line-height: 1.9;
-  font-weight: 400;
-}
-
-.privacy-right {}
-
-.privacy-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background: var(--c-border);
-  border: 1px solid var(--c-border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
+.prv-list { display: flex; flex-direction: column; gap: 2px; }
 .prv-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: var(--c-surface);
-  transition: background 0.2s;
+  display: flex; align-items: flex-start; gap: .875rem;
+  padding: .875rem 1rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; transition: border-color .2s, background .2s;
 }
-
-.prv-item:hover { background: var(--c-surface2); }
-
-.prv-check {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: rgba(0,230,118,0.12);
-  border: 1px solid rgba(0,230,118,0.3);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
+.prv-item:hover { background: var(--blue-bg); border-color: rgba(26,110,255,.3); }
+.prv-chk {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  background: var(--green-bg); border: 1px solid rgba(16,185,129,.3);
+  display: grid; place-items: center; margin-top: .1rem;
 }
+.prv-chk svg { width: 10px; height: 10px; }
+.prv-item-t { font-size: .83rem; font-weight: 600; color: var(--ink); margin-bottom: .15rem; }
+.prv-item-d { font-size: .74rem; color: var(--ink-2); line-height: 1.5; font-weight: 400; }
 
-.prv-check svg { width: 11px; height: 11px; }
-
-.prv-content {}
-
-.prv-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-}
-
-.prv-desc {
-  font-size: 0.78rem;
-  color: var(--c-muted);
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-/* ========== DOWNLOAD / INSTALL ========== */
-#download { background: var(--c-surface); }
-
-.install-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  padding-bottom: 6rem;
-  align-items: start;
-}
-
-.install-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
+/* ─── INSTALL ─── */
+#install { padding: 5rem 0; background: var(--surface); border-top: 1px solid var(--border); }
+.inst-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 2rem; }
+.inst-steps { display: flex; flex-direction: column; }
 .inst-step {
-  display: flex;
-  gap: 1.25rem;
-  padding: 1.5rem 0;
-  border-bottom: 1px solid var(--c-border-light);
+  display: flex; gap: 1rem; padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: background .2s;
 }
-
 .inst-step:last-child { border-bottom: none; }
-
-.inst-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--c-purple-light);
-  padding-top: 0.1rem;
-  flex-shrink: 0;
-  width: 24px;
+.inst-n {
+  font-family: var(--mono); font-size: .65rem; color: var(--blue);
+  font-weight: 500; padding-top: .15rem; flex-shrink: 0; width: 22px;
 }
+.inst-t { font-size: .87rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
+.inst-d { font-size: .76rem; color: var(--ink-2); line-height: 1.65; font-weight: 400; }
+.inst-code { font-family: var(--mono); color: var(--blue); font-size: .72rem; }
 
-.inst-content {}
-
-.inst-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
-}
-
-.inst-desc {
-  font-size: 0.8rem;
-  color: var(--c-muted);
-  line-height: 1.7;
-  font-weight: 400;
-}
-
-.install-right {}
-
+.inst-right {}
 .req-card {
-  background: var(--c-surface2);
-  border: 1px solid var(--c-border);
-  border-radius: 10px;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem;
 }
-
-.req-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--c-muted);
-  margin-bottom: 1.25rem;
+.req-head {
+  padding: .875rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-3);
 }
-
-.req-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--c-border-light);
+.req-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .6rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+  font-size: .8rem;
 }
+.req-row:last-child { border-bottom: none; }
+.req-k { color: var(--ink-2); font-weight: 400; }
+.req-v { font-family: var(--mono); font-size: .74rem; color: var(--ink); font-weight: 500; }
 
-.req-item:last-child { border-bottom: none; }
-
-.req-key { font-size: 0.8rem; color: var(--c-muted); font-weight: 400; }
-
-.req-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--c-white);
+.dl-card {
+  background: linear-gradient(135deg, var(--blue) 0%, #0D4FBB 100%);
+  border-radius: 10px; padding: 1.75rem;
+  text-align: center; color: white;
 }
-
-.dl-block {
-  background: linear-gradient(135deg, rgba(103,58,183,0.15), rgba(103,58,183,0.05));
-  border: 1px solid var(--c-purple-dim);
-  border-radius: 10px;
-  padding: 2rem;
-  text-align: center;
+.dl-card-title { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -.02em; margin-bottom: .3rem; }
+.dl-card-sub { font-size: .78rem; opacity: .75; margin-bottom: 1.25rem; font-family: var(--mono); }
+.btn-dl-big {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  background: white; color: var(--blue);
+  padding: .875rem 1.5rem; border-radius: 7px;
+  text-decoration: none; font-weight: 600; font-size: .88rem;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);
+  margin-bottom: .875rem;
 }
+.btn-dl-big:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+.btn-dl-big svg { width: 16px; height: 16px; }
+.dl-alt { font-size: .72rem; opacity: .7; font-family: var(--mono); }
+.dl-alt a { color: rgba(255,255,255,.9); }
 
-.dl-block-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
+/* ─── CONTACT ─── */
+#contact { padding: 5rem 0; background: var(--white); border-top: 1px solid var(--border); }
+.contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 2rem; }
+.contact-h { font-family: var(--serif); font-size: clamp(1.5rem, 2.5vw, 2.2rem); font-weight: 600; line-height: 1.2; letter-spacing: -.02em; margin-bottom: .875rem; }
+.contact-body { color: var(--ink-2); font-size: .88rem; line-height: 1.8; font-weight: 400; margin-bottom: 2rem; }
+.contact-links { display: flex; flex-direction: column; gap: .625rem; }
+.c-link {
+  display: flex; align-items: center; gap: .875rem;
+  padding: .875rem 1.125rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; text-decoration: none; color: var(--ink);
+  transition: border-color .2s, transform .15s, background .2s;
 }
-
-.dl-block-sub {
-  font-size: 0.8rem;
-  color: var(--c-muted);
-  margin-bottom: 1.5rem;
-  font-weight: 400;
+.c-link:hover { border-color: var(--blue); background: var(--blue-bg); transform: translateX(4px); }
+.c-ico {
+  width: 34px; height: 34px; border-radius: 7px;
+  background: var(--white); border: 1px solid var(--border);
+  display: grid; place-items: center; flex-shrink: 0;
 }
+.c-ico svg { width: 17px; height: 17px; }
+.c-label { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .15rem; }
+.c-val { font-size: .87rem; font-weight: 500; color: var(--ink); }
 
-.btn-dl-large {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--c-purple);
-  color: #fff;
-  padding: 1rem 2rem;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  width: 100%;
-  justify-content: center;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 0.75rem;
+.repo-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
 }
-
-.btn-dl-large:hover {
-  background: var(--c-purple-light);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(103,58,183,0.4);
+.repo-head {
+  padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
 }
-
-.dl-alt {
-  font-size: 0.75rem;
-  color: var(--c-muted);
-  font-family: 'JetBrains Mono', monospace;
+.repo-name { font-family: var(--mono); font-size: .8rem; color: var(--blue); font-weight: 500; }
+.repo-badge {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .08em;
+  color: var(--green); background: var(--green-bg); border: 1px solid rgba(16,185,129,.25);
+  padding: .18rem .5rem; border-radius: 100px;
 }
-
-.dl-alt a { color: var(--c-purple-light); text-decoration: none; }
-.dl-alt a:hover { text-decoration: underline; }
-
-/* ========== CONTACT / FOOTER ========== */
-#contact { background: var(--c-bg); }
-
-.contact-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  padding-bottom: 6rem;
-  align-items: start;
+.repo-body { padding: .25rem 0; }
+.repo-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .6rem 1.25rem; font-size: .8rem;
+  border-bottom: 1px solid var(--border);
 }
-
-.contact-left {}
-
-.contact-headline {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.8rem, 3vw, 2.8rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.25rem;
+.repo-row:last-child { border-bottom: none; }
+.repo-k { color: var(--ink-2); font-weight: 400; }
+.repo-v { font-family: var(--mono); font-size: .74rem; color: var(--ink); }
+.repo-foot {
+  padding: .875rem 1.25rem; border-top: 1px solid var(--border);
+  background: var(--white);
 }
-
-.contact-body {
-  color: var(--c-muted);
-  font-size: 0.9rem;
-  line-height: 1.9;
-  font-weight: 400;
-  margin-bottom: 2.5rem;
+.repo-foot a {
+  display: flex; align-items: center; gap: .5rem;
+  text-decoration: none; color: var(--ink-2); font-size: .8rem;
+  transition: color .2s;
 }
+.repo-foot a:hover { color: var(--blue); }
+.repo-foot svg { width: 14px; height: 14px; }
 
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface);
 }
+.footer-brand { font-family: var(--serif); font-size: .95rem; color: var(--ink-2); }
+.footer-legal { font-family: var(--mono); font-size: .62rem; letter-spacing: .05em; color: var(--ink-3); }
+.footer-legal a { color: var(--ink-3); text-decoration: none; }
+.footer-legal a:hover { color: var(--blue); }
 
-.contact-link {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  text-decoration: none;
-  color: var(--c-white);
-  padding: 1rem 1.25rem;
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: 8px;
-  transition: border-color 0.2s, transform 0.2s;
-}
+/* ─── ANIMATIONS ─── */
+@keyframes up { from { opacity:0; transform: translateY(22px); } to { opacity:1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+.reveal.on { opacity: 1; transform: translateY(0); }
 
-.contact-link:hover {
-  border-color: var(--c-purple);
-  transform: translateX(4px);
-}
-
-.contact-link-icon {
-  width: 36px; height: 36px;
-  border-radius: 6px;
-  background: var(--c-surface2);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-
-.contact-link-icon svg { width: 18px; height: 18px; }
-
-.contact-link-info {}
-
-.contact-link-label {
-  font-size: 0.7rem;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.12em;
-  color: var(--c-muted);
-  text-transform: uppercase;
-  margin-bottom: 0.15rem;
-}
-
-.contact-link-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.contact-right {}
-
-.os-card {
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.os-card-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--c-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.os-card-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.os-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  color: var(--c-green);
-  border: 1px solid rgba(0,230,118,0.3);
-  padding: 0.2rem 0.6rem;
-  border-radius: 100px;
-}
-
-.os-card-body {
-  padding: 1.5rem;
-}
-
-.os-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--c-border-light);
-  font-size: 0.8rem;
-}
-
-.os-line:last-child { border-bottom: none; }
-.os-line-key { color: var(--c-muted); font-weight: 400; }
-.os-line-val { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
-
-.os-footer {
-  padding: 1.25rem 1.5rem;
-  border-top: 1px solid var(--c-border);
-  background: var(--c-surface2);
-}
-
-.os-footer a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  color: var(--c-muted);
-  font-size: 0.78rem;
-  transition: color 0.2s;
-}
-
-.os-footer a:hover { color: var(--c-white); }
-.os-footer svg { width: 14px; height: 14px; }
-
-/* ========== SITE FOOTER ========== */
-.site-footer {
-  border-top: 1px solid var(--c-border);
-  padding: 2rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.site-footer-brand {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1rem;
-  color: var(--c-muted);
-}
-
-.site-footer-legal {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  color: var(--c-muted);
-}
-
-/* ========== ANIMATIONS ========== */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ========== RESPONSIVE ========== */
+/* ─── RESPONSIVE ─── */
 @media (max-width: 1024px) {
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
-  .feat:nth-child(2n) { border-right: none; }
-  .feat:nth-child(5), .feat:nth-child(6) { border-bottom: 1px solid var(--c-border); }
-  .feat:nth-child(7), .feat:nth-child(8) { border-bottom: none; }
-  .steps-track { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-  .steps-track::before { display: none; }
-  .privacy-layout, .install-layout, .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-info { padding: 3rem 2.5rem; border-right: none; }
+  .hero-chat-wrap { padding: 2.5rem; justify-content: center; }
+  .feat-grid { grid-template-columns: repeat(2, 1fr); }
+  .feat-card:nth-child(2n) { border-right: none; }
+  .feat-card:nth-child(5),.feat-card:nth-child(6) { border-bottom: 1px solid var(--border); }
+  .feat-card:nth-child(7),.feat-card:nth-child(8) { border-bottom: none; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .steps-grid::before { display: none; }
+  .prv-layout, .inst-layout, .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; }
 }
-
 @media (max-width: 768px) {
-  nav { padding: 1rem 1.5rem; }
+  nav { padding: .65rem 1.25rem; }
   .nav-links { display: none; }
-  .hero { padding: 7rem 1.5rem 4rem; }
-  .hero-stats { display: none; }
-  .section-wrap { padding: 0 1.5rem; }
-  .section-header { flex-direction: column; gap: 1rem; padding: 4rem 0 2.5rem; }
-  .section-num { width: auto; }
-  .features-grid { grid-template-columns: 1fr; }
-  .feat { border-right: none !important; }
-  .steps-track { grid-template-columns: 1fr; }
-  .site-footer { flex-direction: column; gap: 1rem; text-align: center; }
+  .hero-info { padding: 2.5rem 1.25rem; }
+  .hero-chat-wrap { padding: 1.5rem 1.25rem; }
+  .wrap { padding: 0 1.25rem; }
+  #features, #how, #privacy, #install, #contact { padding: 3.5rem 0; }
+  .feat-grid { grid-template-columns: 1fr; }
+  .feat-card { border-right: none !important; }
+  .feat-card:nth-child(n) { border-bottom: 1px solid var(--border); }
+  .feat-card:last-child { border-bottom: none; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; }
+  footer { flex-direction: column; gap: .75rem; text-align: center; }
 }
 </style>
 </head>
 <body>
-<div id="sp"></div>
+<div id="prog"></div>
 
-<!-- NAV -->
+<!-- ─── NAV ─── -->
 <nav>
-  <a href="#" class="nav-brand">
-    <div class="nav-brand-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+  <a href="#" class="nav-logo">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
         <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/>
         <path d="M20 21a8 8 0 1 0-16 0"/>
-        <circle cx="18" cy="8" r="3" fill="#fff" stroke="none"/>
+        <circle cx="18" cy="8" r="3" fill="white" stroke="none"/>
       </svg>
     </div>
-    <span class="nav-brand-name">Confidant AI</span>
+    <span class="nav-name">Confidant AI</span>
   </a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
-    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#how">How It Works</a></li>
     <li><a href="#privacy">Privacy</a></li>
-    <li><a href="#download">Install</a></li>
+    <li><a href="#install">Install</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="nav-cta" download>Download APK</a>
+  <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="nav-dl" download>
+    Download APK
+  </a>
 </nav>
 
-<!-- HERO -->
+<!-- ─── HERO ─── -->
 <section class="hero">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-glow"></div>
 
-  <div class="hero-eyebrow">
-    <div class="eyebrow-line"></div>
-    <span class="eyebrow-text">100% On-Device · No Cloud · Open Source</span>
-  </div>
-
-  <h1>Your AI.<br><em>Truly</em> private.</h1>
-
-  <p class="hero-sub">
-    Confidant AI runs entirely on your Android device using llama.cpp. Chat naturally, save notes, search the web, and get proactive insights — all while keeping your data completely private and secure on your phone.
-  </p>
-
-  <div class="hero-pills">
-    <span class="pill green">On-Device Processing</span>
-    <span class="pill">Telegram Integration</span>
-    <span class="pill">Web Search</span>
-    <span class="pill">Android 8.0+</span>
-    <span class="pill">Apache 2.0</span>
-  </div>
-
-  <div class="hero-actions">
-    <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="btn-dl" download="confidant-ai-v1.0.0-1-release.apk">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Download APK
-    </a>
-    <a href="https://github.com/2796gaurav/confidant.ai" class="btn-gh" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-      View Source Code
-    </a>
-  </div>
-
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="stat-num">0</div>
-      <div class="stat-label">Data Collected</div>
+  <!-- Left: Info -->
+  <div class="hero-info">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      100% On-Device · No Cloud · Open Source
     </div>
-    <div class="hero-stat">
-      <div class="stat-num">100%</div>
-      <div class="stat-label">On-Device</div>
-    </div>
-    <div class="hero-stat">
-      <div class="stat-num">~2 GB</div>
-      <div class="stat-label">Model Size</div>
-    </div>
-  </div>
-</section>
 
-<!-- INTERACTIVE DEMO -->
-<section id="demo-section" style="background: var(--c-surface); padding: 6rem 0;">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-num">01</div>
-      <div class="section-title-block">
-        <div class="section-kicker">Interactive Demo</div>
-        <h2 class="section-title">See it in action.<br>Try real examples.</h2>
-        <p class="section-desc">Experience Confidant AI's capabilities through interactive conversations. Click examples to see how it handles different tasks.</p>
+    <h1 class="hero-h1">Your AI.<br><em>Truly</em><br>private.</h1>
+
+    <p class="hero-sub">
+      Confidant AI runs entirely on your Android device using llama.cpp. Chat naturally, save notes, search the web, and get proactive insights — all while keeping your data completely private on your phone.
+    </p>
+
+    <div class="hero-tags">
+      <span class="tag accent">On-Device Processing</span>
+      <span class="tag">Telegram Interface</span>
+      <span class="tag">Web Search</span>
+      <span class="tag">Android 8.0+</span>
+      <span class="tag">Apache 2.0</span>
+    </div>
+
+    <div class="hero-actions">
+      <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="btn-primary" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download APK
+      </a>
+      <a href="https://github.com/2796gaurav/confidant.ai" class="btn-ghost" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View Source
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-val">0</div>
+        <div class="stat-key">Data Collected</div>
+      </div>
+      <div>
+        <div class="stat-val">100%</div>
+        <div class="stat-key">On-Device</div>
+      </div>
+      <div>
+        <div class="stat-val">~2 GB</div>
+        <div class="stat-key">Model Size</div>
       </div>
     </div>
-    <div class="reveal" style="margin-bottom: 6rem;">
-      <!-- Demo will be injected here by demo.js -->
+  </div>
+
+  <!-- Right: Telegram-style chat -->
+  <div class="hero-chat-wrap">
+    <div class="phone">
+
+      <!-- TG Header -->
+      <div class="tg-header">
+        <div class="tg-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="tg-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/>
+            <path d="M20 21a8 8 0 1 0-16 0"/>
+            <circle cx="18" cy="8" r="3" fill="white" stroke="none"/>
+          </svg>
+        </div>
+        <div class="tg-info">
+          <div class="tg-bot-name">Confidant AI</div>
+          <div class="tg-bot-status">bot · online</div>
+        </div>
+        <div class="tg-actions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="tg-messages" id="chat-msgs">
+        <div class="tg-date-sep">Today</div>
+
+        <div class="bubble in">
+          <strong>Confidant AI</strong>
+          Hey! I'm running entirely on your device. No cloud, no servers. How can I help?
+          <span class="bubble-time">10:42 AM</span>
+        </div>
+
+        <div class="bubble out">
+          What's the Bitcoin price right now?
+          <span class="bubble-time">10:43 AM <span class="tg-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="4,12 9,17 20,7"/><polyline points="9,17 15,11"/></svg></span></span>
+        </div>
+
+        <div class="bubble in">
+          <strong>Web search →</strong>
+          Bitcoin is trading at <b style="color:var(--blue)">$51,234</b> (+2.3% today). Market cap: $1.01T. All inference runs locally — only your search query left this device.
+          <span class="bubble-time">10:43 AM</span>
+        </div>
+
+        <div class="bubble out">
+          Save note: gym membership is 12345
+          <span class="bubble-time">10:44 AM <span class="tg-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="4,12 9,17 20,7"/><polyline points="9,17 15,11"/></svg></span></span>
+        </div>
+
+        <div class="bubble in">
+          Saved securely to local storage. Retrieve it anytime — "What's my gym membership?"
+          <span class="bubble-time">10:44 AM</span>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="tg-input">
+        <div class="tg-emoji">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <input class="tg-input-field" type="text" placeholder="Message">
+        <div class="tg-attach">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </div>
+        <button class="tg-send">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
     </div>
   </div>
+
 </section>
 
-<!-- FEATURES -->
+<!-- ─── FEATURES ─── -->
 <section id="features">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-num">02</div>
-      <div class="section-title-block">
-        <div class="section-kicker">Capabilities</div>
-        <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
-        <p class="section-desc">A full-featured AI companion that respects your intelligence and your privacy. Every feature engineered for on-device operation.</p>
+  <div class="wrap">
+    <div style="padding: 5rem 0 0;">
+      <div class="sec-meta reveal">
+        <span class="sec-num">01</span>
+        <div class="sec-line"></div>
+        <span class="sec-kicker">Capabilities</span>
+      </div>
+      <div class="reveal">
+        <h2 class="section-h">Everything you need.<br><em>Nothing you don't.</em></h2>
+        <p class="section-sub">Full-featured AI companion engineered for on-device operation. Every capability respects your privacy by design.</p>
       </div>
     </div>
 
-    <div class="features-grid reveal">
-      <!-- 1 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
+    <div class="feat-grid reveal">
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <div class="feat-name">100% On-Device</div>
-        <div class="feat-desc">All inference runs locally using llama.cpp. No server calls, no data egress. Works offline.</div>
-        <div class="feat-tag">CORE</div>
+        <div class="feat-desc">All inference runs locally via llama.cpp. No server calls, no data egress. Works completely offline.</div>
+        <span class="feat-tag">CORE</span>
       </div>
-      <!-- 2 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="feat-name">Privacy First</div>
-        <div class="feat-desc">No names, no personal identifiers collected. Open source code available for full audit.</div>
-        <div class="feat-tag">CORE</div>
+        <div class="feat-desc">No personal identifiers collected. Open source for full audit. Your data never leaves your phone.</div>
+        <span class="feat-tag">CORE</span>
       </div>
-      <!-- 3 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <div class="feat-name">Telegram Integration</div>
-        <div class="feat-desc">Chat through Telegram for a familiar interface. Receive instant responses and proactive notifications.</div>
-        <div class="feat-tag">UI</div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="feat-name">Telegram Interface</div>
+        <div class="feat-desc">Chat through Telegram for a familiar UI. Get instant responses and proactive notifications.</div>
+        <span class="feat-tag">UI</span>
       </div>
-      <!-- 4 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
         <div class="feat-name">Smart Web Search</div>
         <div class="feat-desc">DuckDuckGo-powered search with intelligent query handling. Only search queries leave your device.</div>
-        <div class="feat-tag">TOOL</div>
+        <span class="feat-tag">TOOL</span>
       </div>
-      <!-- 5 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
         <div class="feat-name">Proactive Intelligence</div>
-        <div class="feat-desc">Learns context from your notifications and conversations to offer relevant, timely insights.</div>
-        <div class="feat-tag">AI</div>
+        <div class="feat-desc">Learns context from your notifications to offer relevant, timely insights without being intrusive.</div>
+        <span class="feat-tag">AI</span>
       </div>
-      <!-- 6 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
         <div class="feat-name">Sleep Mode</div>
-        <div class="feat-desc">Configurable quiet hours prevent disturbances during rest. Conserves battery intelligently.</div>
-        <div class="feat-tag">UX</div>
+        <div class="feat-desc">Configurable quiet hours prevent disturbances during rest. Intelligently conserves battery life.</div>
+        <span class="feat-tag">UX</span>
       </div>
-      <!-- 7 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
         <div class="feat-name">Background Processing</div>
-        <div class="feat-desc">Runs as a persistent foreground service. Continues working when the app is closed or screen is off.</div>
-        <div class="feat-tag">SYS</div>
+        <div class="feat-desc">Persistent foreground service. Continues working when the app is closed or screen is off.</div>
+        <span class="feat-tag">SYS</span>
       </div>
-      <!-- 8 -->
-      <div class="feat">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
-        </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></div>
         <div class="feat-name">Thermal Management</div>
-        <div class="feat-desc">Monitors device temperature and adapts inference threads. Optimized for sustained performance.</div>
-        <div class="feat-tag">SYS</div>
+        <div class="feat-desc">Monitors device temperature and adapts inference threads for sustained performance without overheating.</div>
+        <span class="feat-tag">SYS</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how-it-works">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-num">03</div>
-      <div class="section-title-block">
-        <div class="section-kicker">Onboarding</div>
-        <h2 class="section-title">Up and running<br>in minutes.</h2>
-        <p class="section-desc">Four straightforward steps from download to your first conversation. No accounts, no subscriptions, no cloud setup required.</p>
+<!-- ─── HOW IT WORKS ─── -->
+<section id="how">
+  <div class="wrap">
+    <div style="padding: 5rem 0 0;">
+      <div class="sec-meta reveal">
+        <span class="sec-num">02</span>
+        <div class="sec-line"></div>
+        <span class="sec-kicker">Onboarding</span>
+      </div>
+      <div class="reveal">
+        <h2 class="section-h">Up and running<br><em>in minutes.</em></h2>
+        <p class="section-sub">Four steps from download to your first conversation. No accounts, no subscriptions, no cloud setup required.</p>
       </div>
     </div>
 
-    <div class="steps-track reveal">
-      <div class="step-item">
-        <div class="step-dot">1</div>
-        <div class="step-title">Download & Install</div>
-        <div class="step-desc">Download the APK from GitHub Releases. Enable installation from unknown sources in Android Settings and install the app.</div>
+    <div class="steps-grid reveal">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-t">Download & Install</div>
+        <div class="step-d">Download the APK from GitHub Releases. Enable installation from unknown sources in Android Settings and install.</div>
       </div>
-      <div class="step-item">
-        <div class="step-dot">2</div>
-        <div class="step-title">Complete Setup</div>
-        <div class="step-desc">Enter your interests, connect your Telegram bot token, configure sleep mode hours, and grant the necessary permissions.</div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-t">Complete Setup</div>
+        <div class="step-d">Enter your interests, connect your Telegram bot token, configure sleep mode hours, and grant necessary permissions.</div>
       </div>
-      <div class="step-item">
-        <div class="step-dot">3</div>
-        <div class="step-title">Download Model</div>
-        <div class="step-desc">From the Dashboard, tap "Download Model Now." The AI model is ~2 GB. A WiFi connection is strongly recommended.</div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-t">Download Model</div>
+        <div class="step-d">From the Dashboard, tap "Download Model Now." The AI model is ~2 GB. WiFi connection strongly recommended.</div>
       </div>
-      <div class="step-item">
-        <div class="step-dot">4</div>
-        <div class="step-title">Start Chatting</div>
-        <div class="step-desc">Tap "Start Server" on the Dashboard, then open Telegram and begin your first conversation with your AI companion.</div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-t">Start Chatting</div>
+        <div class="step-d">Tap "Start Server" on the Dashboard, then open Telegram and begin your first conversation with your AI companion.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRIVACY -->
+<!-- ─── PRIVACY ─── -->
 <section id="privacy">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-num">04</div>
-      <div class="section-title-block">
-        <div class="section-kicker">Privacy Architecture</div>
-        <h2 class="section-title">Your data never<br>leaves the device.</h2>
+  <div class="wrap">
+    <div style="padding: 5rem 0 0;">
+      <div class="sec-meta reveal">
+        <span class="sec-num">03</span>
+        <div class="sec-line"></div>
+        <span class="sec-kicker">Privacy Architecture</span>
+      </div>
+      <div class="reveal">
+        <h2 class="section-h">Your data never<br><em>leaves the device.</em></h2>
       </div>
     </div>
 
-    <div class="privacy-layout reveal">
-      <div class="privacy-left">
-        <p class="privacy-statement">
-          Privacy isn't a feature — it's the <em>foundation</em> every decision is built on.
-        </p>
-        <p class="privacy-body">
-          Confidant AI was designed from the ground up with a single architectural constraint: no personal data, no conversation history, no inferences about you should ever be transmitted to a third-party server. The only external network calls the app makes are your deliberate web searches via DuckDuckGo — and that's it.<br><br>
+    <div class="prv-layout reveal">
+      <div>
+        <p class="prv-quote">Privacy isn't a feature — it's the <strong>foundation</strong> every decision is built on.</p>
+        <p class="prv-body">
+          Confidant AI was designed with a single architectural constraint: no personal data, no conversation history, no inferences about you should ever be transmitted to a third-party server. The only external network calls the app makes are your deliberate web searches via DuckDuckGo.<br><br>
           The full source code is publicly available on GitHub. Read it, audit it, compile it yourself.
         </p>
       </div>
-      <div class="privacy-right">
-        <div class="privacy-list">
-          <div class="prv-item">
-            <div class="prv-check">
-              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-            </div>
-            <div class="prv-content">
-              <div class="prv-title">100% Local Storage</div>
-              <div class="prv-desc">All conversation and preference data lives only on your device. No syncing to external servers.</div>
-            </div>
+      <div class="prv-list">
+        <div class="prv-item">
+          <div class="prv-chk"><svg viewBox="0 0 12 12" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div>
+            <div class="prv-item-t">100% Local Storage</div>
+            <div class="prv-item-d">All conversation and preference data lives only on your device. No syncing to external servers.</div>
           </div>
-          <div class="prv-item">
-            <div class="prv-check">
-              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-            </div>
-            <div class="prv-content">
-              <div class="prv-title">No Personal Identifiers</div>
-              <div class="prv-desc">We do not collect names, gender, device IDs, or any personally identifiable information.</div>
-            </div>
+        </div>
+        <div class="prv-item">
+          <div class="prv-chk"><svg viewBox="0 0 12 12" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div>
+            <div class="prv-item-t">No Personal Identifiers</div>
+            <div class="prv-item-d">We do not collect names, gender, device IDs, or any personally identifiable information.</div>
           </div>
-          <div class="prv-item">
-            <div class="prv-check">
-              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-            </div>
-            <div class="prv-content">
-              <div class="prv-title">Open Source & Auditable</div>
-              <div class="prv-desc">Every line of code is public. Trust the engineering, not our word.</div>
-            </div>
+        </div>
+        <div class="prv-item">
+          <div class="prv-chk"><svg viewBox="0 0 12 12" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div>
+            <div class="prv-item-t">Open Source & Auditable</div>
+            <div class="prv-item-d">Every line of code is public. Trust the engineering, not our word.</div>
           </div>
-          <div class="prv-item">
-            <div class="prv-check">
-              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-            </div>
-            <div class="prv-content">
-              <div class="prv-title">Zero Analytics & Telemetry</div>
-              <div class="prv-desc">No crash reporters, no usage analytics, no A/B testing frameworks. Nothing.</div>
-            </div>
+        </div>
+        <div class="prv-item">
+          <div class="prv-chk"><svg viewBox="0 0 12 12" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div>
+            <div class="prv-item-t">Zero Analytics & Telemetry</div>
+            <div class="prv-item-d">No crash reporters, no usage analytics, no A/B testing frameworks. Nothing.</div>
           </div>
-          <div class="prv-item">
-            <div class="prv-check">
-              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-            </div>
-            <div class="prv-content">
-              <div class="prv-title">Encrypted Storage (Android 9+)</div>
-              <div class="prv-desc">All local data is encrypted at rest on Android 9 and above. Never readable from other apps.</div>
-            </div>
+        </div>
+        <div class="prv-item">
+          <div class="prv-chk"><svg viewBox="0 0 12 12" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div>
+            <div class="prv-item-t">Encrypted Storage (Android 9+)</div>
+            <div class="prv-item-d">All local data is encrypted at rest on Android 9 and above. Never readable from other apps.</div>
           </div>
-          <div class="prv-item">
-            <div class="prv-check">
-              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-            </div>
-            <div class="prv-content">
-              <div class="prv-title">Web Search Isolation</div>
-              <div class="prv-desc">Only explicit web search queries leave the device. No conversation context is attached.</div>
-            </div>
+        </div>
+        <div class="prv-item">
+          <div class="prv-chk"><svg viewBox="0 0 12 12" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+          <div>
+            <div class="prv-item-t">Web Search Isolation</div>
+            <div class="prv-item-d">Only explicit web search queries leave the device. No conversation context is ever attached.</div>
           </div>
         </div>
       </div>
@@ -1234,193 +899,145 @@ section { position: relative; }
   </div>
 </section>
 
-<!-- DOWNLOAD / INSTALL -->
-<section id="download">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-num">05</div>
-      <div class="section-title-block">
-        <div class="section-kicker">Installation</div>
-        <h2 class="section-title">Step-by-step<br>install guide.</h2>
-        <p class="section-desc">Android requires a few extra taps to install apps outside the Play Store. Here's exactly what to do.</p>
+<!-- ─── INSTALL ─── -->
+<section id="install">
+  <div class="wrap">
+    <div style="padding: 5rem 0 0;">
+      <div class="sec-meta reveal">
+        <span class="sec-num">04</span>
+        <div class="sec-line"></div>
+        <span class="sec-kicker">Installation</span>
+      </div>
+      <div class="reveal">
+        <h2 class="section-h">Step-by-step<br><em>install guide.</em></h2>
+        <p class="section-sub">Android requires a few extra taps to install apps outside the Play Store. Here's exactly what to do.</p>
       </div>
     </div>
 
-    <div class="install-layout reveal">
-      <div class="install-steps">
+    <div class="inst-layout reveal">
+      <div class="inst-steps">
         <div class="inst-step">
-          <div class="inst-num">01</div>
-          <div class="inst-content">
-            <div class="inst-title">Download the APK</div>
-            <div class="inst-desc">Click the download button and save <code style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--c-purple-light)">confidant-ai-v1.0.0-1-release.apk</code> to your Android device. You can also find all releases on GitHub.</div>
-          </div>
+          <div class="inst-n">01</div>
+          <div><div class="inst-t">Download the APK</div>
+          <div class="inst-d">Click the download button and save <span class="inst-code">confidant-ai-v1.0.0-1-release.apk</span> to your Android device. All releases are also available on GitHub.</div></div>
         </div>
         <div class="inst-step">
-          <div class="inst-num">02</div>
-          <div class="inst-content">
-            <div class="inst-title">Enable Unknown Sources</div>
-            <div class="inst-desc">Navigate to Settings → Security → Install Unknown Apps (or "Install from Unknown Sources"). Enable this for your browser or file manager.</div>
-          </div>
+          <div class="inst-n">02</div>
+          <div><div class="inst-t">Enable Unknown Sources</div>
+          <div class="inst-d">Settings → Security → Install Unknown Apps. Enable for your browser or file manager. This allows installing apps outside the Play Store.</div></div>
         </div>
         <div class="inst-step">
-          <div class="inst-num">03</div>
-          <div class="inst-content">
-            <div class="inst-title">Install the APK</div>
-            <div class="inst-desc">Open the downloaded APK file from your notifications or file manager. Tap "Install" and follow the on-screen prompts. Grant all requested permissions.</div>
-          </div>
+          <div class="inst-n">03</div>
+          <div><div class="inst-t">Install the APK</div>
+          <div class="inst-d">Open the downloaded APK from notifications or your file manager. Tap "Install" and grant all requested permissions.</div></div>
         </div>
         <div class="inst-step">
-          <div class="inst-num">04</div>
-          <div class="inst-content">
-            <div class="inst-title">Complete Onboarding</div>
-            <div class="inst-desc">Launch Confidant AI. Enter your interests, connect your Telegram bot by pasting your bot token, set sleep mode hours, and grant notification access.</div>
-          </div>
+          <div class="inst-n">04</div>
+          <div><div class="inst-t">Complete Onboarding</div>
+          <div class="inst-d">Launch Confidant AI. Enter your interests, connect your Telegram bot token, set sleep mode hours, and grant notification access.</div></div>
         </div>
         <div class="inst-step">
-          <div class="inst-num">05</div>
-          <div class="inst-content">
-            <div class="inst-title">Download the AI Model</div>
-            <div class="inst-desc">From the Dashboard, tap "Download Model Now." The model is approximately 2 GB. Connect to WiFi before starting to avoid mobile data charges.</div>
-          </div>
+          <div class="inst-n">05</div>
+          <div><div class="inst-t">Download the AI Model</div>
+          <div class="inst-d">From the Dashboard, tap "Download Model Now." The model is ~2 GB. Connect to WiFi before starting to avoid mobile data charges.</div></div>
         </div>
         <div class="inst-step">
-          <div class="inst-num">06</div>
-          <div class="inst-content">
-            <div class="inst-title">Start Chatting</div>
-            <div class="inst-desc">Once the model is downloaded, tap "Start Server" on the Dashboard. Open Telegram, find your bot, and send your first message.</div>
-          </div>
+          <div class="inst-n">06</div>
+          <div><div class="inst-t">Start Chatting</div>
+          <div class="inst-d">Once the model is downloaded, tap "Start Server" on the Dashboard. Open Telegram, find your bot, and send your first message.</div></div>
         </div>
       </div>
 
-      <div class="install-right">
+      <div class="inst-right">
         <div class="req-card">
-          <div class="req-title">System Requirements</div>
-          <div class="req-item">
-            <span class="req-key">Android Version</span>
-            <span class="req-val">8.0 (API 26)+</span>
-          </div>
-          <div class="req-item">
-            <span class="req-key">RAM</span>
-            <span class="req-val">4 GB recommended</span>
-          </div>
-          <div class="req-item">
-            <span class="req-key">Storage</span>
-            <span class="req-val">3 GB free space</span>
-          </div>
-          <div class="req-item">
-            <span class="req-key">Network</span>
-            <span class="req-val">WiFi (model download)</span>
-          </div>
-          <div class="req-item">
-            <span class="req-key">Encryption</span>
-            <span class="req-val">Android 9+ (at rest)</span>
-          </div>
-          <div class="req-item">
-            <span class="req-key">Architecture</span>
-            <span class="req-val">ARM64 / x86_64</span>
-          </div>
+          <div class="req-head">System Requirements</div>
+          <div class="req-row"><span class="req-k">Android Version</span><span class="req-v">8.0 (API 26)+</span></div>
+          <div class="req-row"><span class="req-k">RAM</span><span class="req-v">4 GB recommended</span></div>
+          <div class="req-row"><span class="req-k">Storage</span><span class="req-v">3 GB free space</span></div>
+          <div class="req-row"><span class="req-k">Network</span><span class="req-v">WiFi (model download)</span></div>
+          <div class="req-row"><span class="req-k">Encryption</span><span class="req-v">Android 9+ (at rest)</span></div>
+          <div class="req-row"><span class="req-k">Architecture</span><span class="req-v">ARM64 / x86_64</span></div>
         </div>
 
-        <div class="dl-block">
-          <div class="dl-block-title">Confidant AI v1.0.0</div>
-          <div class="dl-block-sub">Production release · Android APK</div>
-          <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="btn-dl-large" download="confidant-ai-v1.0.0-1-release.apk">
+        <div class="dl-card">
+          <div class="dl-card-title">Confidant AI v1.0.0</div>
+          <div class="dl-card-sub">Production release · Android APK</div>
+          <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="btn-dl-big" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download APK
           </a>
-          <div class="dl-alt">
-            Or view <a href="https://github.com/2796gaurav/confidant.ai/releases" target="_blank" rel="noopener">all releases on GitHub →</a>
-          </div>
+          <div class="dl-alt">Or view <a href="https://github.com/2796gaurav/confidant.ai/releases" target="_blank" rel="noopener">all releases on GitHub →</a></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- ─── CONTACT ─── -->
 <section id="contact">
-  <div class="section-wrap">
-    <div class="section-header reveal">
-      <div class="section-num">06</div>
-      <div class="section-title-block">
-        <div class="section-kicker">Get in Touch</div>
-        <h2 class="section-title">Built in the open.<br>Questions welcome.</h2>
+  <div class="wrap">
+    <div style="padding: 5rem 0 0;">
+      <div class="sec-meta reveal">
+        <span class="sec-num">05</span>
+        <div class="sec-line"></div>
+        <span class="sec-kicker">Get in Touch</span>
+      </div>
+      <div class="reveal">
+        <h2 class="section-h">Built in the open.<br><em>Questions welcome.</em></h2>
       </div>
     </div>
 
     <div class="contact-layout reveal">
-      <div class="contact-left">
-        <p class="contact-headline">Bug report, feature request, or just curious how it works?</p>
-        <p class="contact-body">
-          Confidant AI is an open source project built with care. Reach out via email, connect on LinkedIn, or open an issue directly on GitHub. Every message is read.
-        </p>
-
+      <div>
+        <p class="contact-h">Bug report, feature request, or just curious how it works?</p>
+        <p class="contact-body">Confidant AI is an open source project built with care by Gaurav Chauhan. Reach out via email, connect on LinkedIn, or open an issue directly on GitHub. Every message is read.</p>
         <div class="contact-links">
-          <a href="mailto:gauravc2708@gmail.com" class="contact-link">
-            <div class="contact-link-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:gauravc2708@gmail.com" class="c-link">
+            <div class="c-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1A6EFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
-            <div class="contact-link-info">
-              <div class="contact-link-label">Email</div>
-              <div class="contact-link-value">gauravc2708@gmail.com</div>
-            </div>
-          </a>
-
-          <a href="https://www.linkedin.com/in/gauravc2708/" class="contact-link" target="_blank" rel="noopener">
-            <div class="contact-link-icon">
-              <svg viewBox="0 0 24 24" fill="#8B5CF6" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-            </div>
-            <div class="contact-link-info">
-              <div class="contact-link-label">LinkedIn</div>
-              <div class="contact-link-value">Gaurav Chauhan</div>
+            <div>
+              <div class="c-label">Email</div>
+              <div class="c-val">gauravc2708@gmail.com</div>
             </div>
           </a>
-
-          <a href="https://github.com/2796gaurav/confidant.ai/issues" class="contact-link" target="_blank" rel="noopener">
-            <div class="contact-link-icon">
-              <svg viewBox="0 0 24 24" fill="#8B5CF6" width="18" height="18"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          <a href="https://www.linkedin.com/in/gauravc2708/" class="c-link" target="_blank" rel="noopener">
+            <div class="c-ico">
+              <svg viewBox="0 0 24 24" fill="#1A6EFF" width="17" height="17"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
             </div>
-            <div class="contact-link-info">
-              <div class="contact-link-label">GitHub Issues</div>
-              <div class="contact-link-value">Report a bug or request a feature</div>
+            <div>
+              <div class="c-label">LinkedIn</div>
+              <div class="c-val">Gaurav Chauhan</div>
+            </div>
+          </a>
+          <a href="https://github.com/2796gaurav/confidant.ai/issues" class="c-link" target="_blank" rel="noopener">
+            <div class="c-ico">
+              <svg viewBox="0 0 24 24" fill="#1A6EFF" width="17" height="17"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </div>
+            <div>
+              <div class="c-label">GitHub Issues</div>
+              <div class="c-val">Report a bug or request a feature</div>
             </div>
           </a>
         </div>
       </div>
 
-      <div class="contact-right">
-        <div class="os-card">
-          <div class="os-card-header">
-            <span class="os-card-title">github.com/2796gaurav/confidant.ai</span>
-            <span class="os-badge">OPEN SOURCE</span>
+      <div>
+        <div class="repo-card">
+          <div class="repo-head">
+            <span class="repo-name">github.com/2796gaurav/confidant.ai</span>
+            <span class="repo-badge">OPEN SOURCE</span>
           </div>
-          <div class="os-card-body">
-            <div class="os-line">
-              <span class="os-line-key">License</span>
-              <span class="os-line-val">Apache 2.0</span>
-            </div>
-            <div class="os-line">
-              <span class="os-line-key">Language</span>
-              <span class="os-line-val">Kotlin / Jetpack Compose</span>
-            </div>
-            <div class="os-line">
-              <span class="os-line-key">AI Runtime</span>
-              <span class="os-line-val">llama.cpp</span>
-            </div>
-            <div class="os-line">
-              <span class="os-line-key">Interface</span>
-              <span class="os-line-val">Telegram Bot API</span>
-            </div>
-            <div class="os-line">
-              <span class="os-line-key">Search</span>
-              <span class="os-line-val">DuckDuckGo</span>
-            </div>
-            <div class="os-line">
-              <span class="os-line-key">Version</span>
-              <span class="os-line-val">v1.0.0-1</span>
-            </div>
+          <div class="repo-body">
+            <div class="repo-row"><span class="repo-k">License</span><span class="repo-v">Apache 2.0</span></div>
+            <div class="repo-row"><span class="repo-k">Language</span><span class="repo-v">Kotlin / Jetpack Compose</span></div>
+            <div class="repo-row"><span class="repo-k">AI Runtime</span><span class="repo-v">llama.cpp</span></div>
+            <div class="repo-row"><span class="repo-k">Interface</span><span class="repo-v">Telegram Bot API</span></div>
+            <div class="repo-row"><span class="repo-k">Search</span><span class="repo-v">DuckDuckGo</span></div>
+            <div class="repo-row"><span class="repo-k">Developer</span><span class="repo-v">Gaurav Chauhan</span></div>
+            <div class="repo-row"><span class="repo-k">Version</span><span class="repo-v">v1.0.0-1</span></div>
           </div>
-          <div class="os-footer">
+          <div class="repo-foot">
             <a href="https://github.com/2796gaurav/confidant.ai" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
               View Repository
@@ -1429,48 +1046,75 @@ section { position: relative; }
         </div>
       </div>
     </div>
+
+    <div style="padding-bottom: 5rem;"></div>
   </div>
 </section>
 
-<!-- SITE FOOTER -->
-<footer class="site-footer">
-  <span class="site-footer-brand">Confidant AI</span>
-  <span class="site-footer-legal">© 2026 · Made for privacy-conscious users · <a href="https://github.com/2796gaurav/confidant.ai/blob/main/LICENSE" target="_blank" style="color:var(--c-muted);text-decoration:none">Apache 2.0</a></span>
+<!-- ─── FOOTER ─── -->
+<footer>
+  <span class="footer-brand">Confidant AI</span>
+  <span class="footer-legal">© 2026 Gaurav Chauhan · <a href="https://github.com/2796gaurav/confidant.ai/blob/main/LICENSE" target="_blank">Apache 2.0</a></span>
 </footer>
 
 <script>
-  // Scroll progress
-  const sp = document.getElementById('sp');
-  window.addEventListener('scroll', () => {
-    const p = window.scrollY / (document.body.offsetHeight - window.innerHeight) * 100;
-    sp.style.width = p + '%';
-  }, { passive: true });
+// Scroll progress
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  prog.style.width = (window.scrollY / (document.body.offsetHeight - innerHeight) * 100) + '%';
+}, { passive: true });
 
-  // Reveal on scroll
-  const reveals = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        e.target.style.transitionDelay = (i * 0.05) + 's';
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-  reveals.forEach(el => io.observe(el));
-
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const t = document.querySelector(a.getAttribute('href'));
-      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
+// Reveal on scroll
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
   });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+
+// Animated chat messages - add one after delay
+setTimeout(() => {
+  const msgs = document.getElementById('chat-msgs');
+  const typing = document.createElement('div');
+  typing.className = 'typing-indicator';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    typing.remove();
+    const b = document.createElement('div');
+    b.className = 'bubble out';
+    b.innerHTML = 'Remind me to call mom at 3pm tomorrow<span class="bubble-time">10:46 AM <span class="tg-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="4,12 9,17 20,7"/><polyline points="9,17 15,11"/></svg></span></span>';
+    msgs.appendChild(b);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    setTimeout(() => {
+      const t2 = document.createElement('div');
+      t2.className = 'typing-indicator';
+      t2.innerHTML = '<span></span><span></span><span></span>';
+      msgs.appendChild(t2);
+      msgs.scrollTop = msgs.scrollHeight;
+
+      setTimeout(() => {
+        t2.remove();
+        const b2 = document.createElement('div');
+        b2.className = 'bubble in';
+        b2.innerHTML = 'Reminder set. "Call mom" — tomorrow 3:00 PM. Saved locally, encrypted on device.<span class="bubble-time">10:46 AM</span>';
+        msgs.appendChild(b2);
+        msgs.scrollTop = msgs.scrollHeight;
+      }, 1400);
+    }, 700);
+  }, 1800);
+}, 2000);
 </script>
-
-<!-- Demo Script -->
-<script src="demo.js"></script>
-
 </body>
 </html>

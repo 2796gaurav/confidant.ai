@@ -9,7 +9,7 @@
 **Your Privacy-First AI Companion**
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/2796gaurav/confidant.ai)
-[![Website](https://img.shields.io/badge/Website-Landing%20Page-green)](http://2796gaurav.github.io/confidantai)
+[![Website](https://img.shields.io/badge/Website-Landing%20Page-green)](https://2796gaurav.github.io/confidant.ai)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-green?logo=android)](https://www.android.com/)
 
