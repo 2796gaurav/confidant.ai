@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Confidant AI — 100% On-Device AI Assistant. Privacy-first. No cloud. Your data never leaves your phone.">
 <title>Confidant AI — On-Device AI Companion</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -54,8 +55,10 @@ nav {
   text-decoration: none; color: var(--ink);
 }
 .nav-icon {
-  width: 30px; height: 30px; background: var(--ink); border-radius: 7px;
-  display: grid; place-items: center; flex-shrink: 0;
+  width: 32px; height: 32px; flex-shrink: 0;
+}
+.nav-icon img {
+  width: 100%; height: 100%; display: block;
 }
 .nav-name { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; letter-spacing: -.01em; }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
@@ -573,11 +576,7 @@ footer {
 <nav>
   <a href="#" class="nav-logo">
     <div class="nav-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-        <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/>
-        <path d="M20 21a8 8 0 1 0-16 0"/>
-        <circle cx="18" cy="8" r="3" fill="white" stroke="none"/>
-      </svg>
+      <img src="assets/logo.svg" alt="Confidant AI Logo">
     </div>
     <span class="nav-name">Confidant AI</span>
   </a>
@@ -588,7 +587,7 @@ footer {
     <li><a href="#install">Install</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="https://github.com/2796gaurav/confidant.ai/raw/main/releases/confidant-ai-v1.0.0-1-release.apk" class="nav-dl" download>
+  <a href="https://github.com/2796gaurav/confidant.ai/raw/refs/heads/main/releases/confidant-ai-v1.0.0-1-release.apk" class="nav-dl" download>
     Download APK
   </a>
 </nav>
@@ -618,7 +617,7 @@ footer {
     </div>
 
     <div class="hero-actions">
-      <a href="https://github.com/2796gaurav/confidant.ai/raw/main/releases/confidant-ai-v1.0.0-1-release.apk" class="btn-primary" download>
+      <a href="https://github.com/2796gaurav/confidant.ai/raw/refs/heads/main/releases/confidant-ai-v1.0.0-1-release.apk" class="btn-primary" download>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download APK
       </a>
@@ -654,11 +653,7 @@ footer {
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </div>
         <div class="tg-avatar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
-            <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/>
-            <path d="M20 21a8 8 0 1 0-16 0"/>
-            <circle cx="18" cy="8" r="3" fill="white" stroke="none"/>
-          </svg>
+          <img src="assets/logo.svg" alt="Confidant AI" style="width: 100%; height: 100%; border-radius: 50%;">
         </div>
         <div class="tg-info">
           <div class="tg-bot-name">Confidant AI</div>
@@ -962,11 +957,11 @@ footer {
         <div class="dl-card">
           <div class="dl-card-title">Confidant AI v1.0.0</div>
           <div class="dl-card-sub">Production release · Android APK</div>
-          <a href="https://github.com/2796gaurav/confidant.ai/raw/main/releases/confidant-ai-v1.0.0-1-release.apk" class="btn-dl-big" download>
+          <a href="https://github.com/2796gaurav/confidant.ai/raw/refs/heads/main/releases/confidant-ai-v1.0.0-1-release.apk" class="btn-dl-big" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download APK
           </a>
-          <div class="dl-alt">Or view <a href="https://github.com/2796gaurav/confidant.ai/releases" target="_blank" rel="noopener">all releases on GitHub →</a></div>
+          <div class="dl-alt">Direct download from repository</div>
         </div>
       </div>
     </div>
