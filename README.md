@@ -25,14 +25,18 @@
 
 ### ✨ Key Features
 
-- 🔒 **100% On-Device Processing** - All AI processing happens locally. No cloud servers, no data collection.
+- 🔒 **100% On-Device Processing** - All AI processing happens locally using llama.cpp. No cloud servers, no data collection.
 - 🛡️ **Privacy First** - We don't collect names, gender, or personal identifiers. Your data stays on your device.
 - 💬 **Telegram Integration** - Chat with your AI companion through Telegram. Get instant responses and proactive notifications.
 - 🔍 **Smart Web Search** - Integrated DuckDuckGo search with intelligent query handling for accurate, up-to-date information.
-- 🧠 **Intelligent & Proactive** - Learns from your notifications and conversations to provide contextual assistance.
+- 📝 **Smart Notes System** - Save and retrieve notes with BM25 keyword search, auto-categorization, and fuzzy matching.
+- 🧠 **Intelligent Tool Calling** - Automatic detection and execution of tools (notes, search) with multi-turn conversations.
+- 🎯 **Personalization Engine** - Learns your interests and adapts responses for contextual, relevant assistance.
 - 🌙 **Sleep Mode** - Conserve battery and prevent disturbances during your rest hours.
-- 📱 **Background Processing** - Continues working even when the app is closed.
-- 🌡️ **Thermal Management** - Adaptive performance based on device temperature.
+- 📱 **24/7 Background Service** - Continues working even when the app is closed with intelligent power management.
+- 🌡️ **Thermal Management** - Adaptive performance based on device temperature to prevent overheating.
+- ⚡ **Optimized Performance** - ARM NEON SIMD, i8mm quantization, flash attention for fast inference.
+- 🔄 **Proactive Messaging** - Pattern detection from notifications with rate-limited, context-aware suggestions.
 
 ---
 
@@ -61,15 +65,15 @@
    ```
 
 2. **Download APK**
-   - Visit the [Releases](https://github.com/2796gaurav/confidant.ai/releases) page
-   - Download the latest APK file
+   - Download the latest production APK: [confidant-ai-v1.0.0-1-release.apk](https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk)
+   - Or visit the [Releases](https://github.com/2796gaurav/confidant.ai/releases) page
    - Install on your Android device
 
 3. **Build from Source**
    ```bash
-   ./gradlew assembleDebug
+   ./gradlew assembleRelease
    ```
-   APK will be generated at: `app/build/outputs/apk/debug/app-debug.apk`
+   APK will be generated at: `app/build/outputs/apk/release/app-release.apk`
 
 ---
 
@@ -105,6 +109,80 @@
    - Search for `@userinfobot` in Telegram
    - Start a chat and copy your ID
 6. Enter both in the app during onboarding
+
+---
+
+## 🎯 What Can Confidant AI Do?
+
+Confidant AI is your intelligent companion that can help with a wide range of tasks. Here are some example queries:
+
+### 💬 Conversational AI
+```
+"Hey, how are you?"
+"Tell me a joke"
+"What's the meaning of life?"
+"Explain quantum computing in simple terms"
+```
+
+### 🔍 Web Search & Current Information
+```
+"What's the Bitcoin price today?"
+"Latest news about AI"
+"Weather in New York"
+"Who won the Super Bowl?"
+"Stock price of Tesla"
+"Current affairs in technology"
+```
+
+### 📝 Smart Notes System
+```
+Save Notes:
+"Save note: WiFi password is MySecurePass123"
+"Remember to call mom tomorrow at 3pm"
+"Note for me: Meeting with John on Friday"
+"Don't forget to buy milk and eggs"
+
+Retrieve Notes:
+"What's my WiFi password?"
+"Show my reminders"
+"Find notes about meetings"
+"Get my shopping list"
+```
+
+### 🎯 Personalized Responses
+Based on your interests (configured during onboarding):
+```
+If interested in "technology, AI, programming":
+"Tell me about the latest AI developments"
+→ Gets personalized, detailed tech news
+
+If interested in "fitness, health":
+"What's a good workout routine?"
+→ Provides fitness-focused recommendations
+```
+
+### 🧠 Intelligent Tool Calling
+Confidant automatically detects when to use tools:
+```
+"Bitcoin price" → Automatically searches web
+"Save my password" → Automatically saves to notes
+"What did I save about work?" → Automatically retrieves notes
+```
+
+### 🔄 Multi-Turn Conversations
+```
+You: "Save a note"
+AI: "What would you like to save?"
+You: "My gym membership number is 12345"
+AI: "Got it! I've saved your gym membership number."
+```
+
+### 📊 Context-Aware Assistance
+```
+"Remind me about that thing" → Uses conversation history
+"More details on that" → Continues previous topic
+"What else?" → Provides additional information
+```
 
 ---
 
@@ -363,7 +441,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - **GitHub Issues**: [Report a bug](https://github.com/2796gaurav/confidant.ai/issues)
-- **Website**: [http://2796gaurav.github.io/confidantai](http://2796gaurav.github.io/confidantai)
+- **Website**: [https://2796gaurav.github.io/confidant.ai](https://2796gaurav.github.io/confidant.ai)
 - **Repository**: [https://github.com/2796gaurav/confidant.ai](https://github.com/2796gaurav/confidant.ai)
 
 ---
@@ -371,8 +449,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🌐 Links
 
 - 🔗 **Repository**: [https://github.com/2796gaurav/confidant.ai](https://github.com/2796gaurav/confidant.ai)
-- 🌐 **Website**: [http://2796gaurav.github.io/confidantai](http://2796gaurav.github.io/confidantai)
-- 📱 **Download APK**: [Releases](https://github.com/2796gaurav/confidant.ai/releases)
+- 🌐 **Website**: [https://2796gaurav.github.io/confidant.ai](https://2796gaurav.github.io/confidant.ai)
+- 📱 **Download APK**: [Latest Release](https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk) | [All Releases](https://github.com/2796gaurav/confidant.ai/releases)
 
 ---
 

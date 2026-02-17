@@ -1,821 +1,1476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Confidant AI - Your Privacy-First AI Companion. 100% On-Device AI Assistant powered by llama.cpp">
-    <meta name="keywords" content="AI assistant, on-device AI, privacy, Android, llama.cpp, Telegram bot">
-    <meta name="author" content="Confidant AI">
-    <title>Confidant AI - Your Privacy-First AI Companion</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Confidant AI — 100% On-Device AI Assistant. Privacy-first. No cloud. Complete control.">
+<title>Confidant AI — Privacy-First AI Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="demo.css">
+<style>
+:root {
+  --c-bg: #070B1E;
+  --c-surface: #0F1630;
+  --c-surface2: #161D38;
+  --c-purple: #673AB7;
+  --c-purple-light: #8B5CF6;
+  --c-purple-dim: #3D2372;
+  --c-green: #00E676;
+  --c-green-dim: #00C853;
+  --c-white: #F0EDE8;
+  --c-muted: #6B7280;
+  --c-border: rgba(103,58,183,0.25);
+  --c-border-light: rgba(240,237,232,0.08);
+}
 
-        :root {
-            --primary: #673AB7;
-            --primary-dark: #512DA8;
-            --primary-light: #9575CD;
-            --secondary: #00E676;
-            --background: #0A0E27;
-            --surface: #1A1F3A;
-            --surface-light: #2A2F4A;
-            --text-primary: #FFFFFF;
-            --text-secondary: #B0BEC5;
-            --text-tertiary: #78909C;
-            --accent: #FF5252;
-            --gradient: linear-gradient(135deg, #673AB7 0%, #512DA8 100%);
-            --gradient-secondary: linear-gradient(135deg, #00E676 0%, #00C853 100%);
-        }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--background);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+html { scroll-behavior: smooth; }
 
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--c-bg);
+  color: var(--c-white);
+  overflow-x: hidden;
+}
 
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(10, 14, 39, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(103, 58, 183, 0.3);
-        }
+::selection { background: var(--c-purple); color: #fff; }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-primary);
-            text-decoration: none;
-        }
+/* SCROLL PROGRESS */
+#sp {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--c-purple), var(--c-green));
+  z-index: 10000;
+  transition: width 0.1s linear;
+}
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1.25rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: rgba(7,11,30,0.8);
+  border-bottom: 1px solid var(--c-border);
+}
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--c-white);
+}
 
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-weight: 500;
-        }
+.nav-brand-icon {
+  width: 34px; height: 34px;
+  background: var(--c-purple);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
 
-        .nav-links a:hover {
-            color: var(--primary-light);
-        }
+.nav-brand-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
 
-        .cta-button {
-            background: var(--gradient);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
-        }
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(103, 58, 183, 0.4);
-        }
+.nav-links a {
+  text-decoration: none;
+  color: var(--c-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
 
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 8rem 2rem 4rem;
-            background: radial-gradient(ellipse at center, rgba(103, 58, 183, 0.1) 0%, transparent 70%);
-        }
+.nav-links a:hover { color: var(--c-white); }
 
-        .hero-content {
-            max-width: 900px;
-        }
+.nav-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--c-green);
+  border: 1px solid var(--c-green);
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #FFFFFF 0%, #B0BEC5 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+.nav-cta:hover {
+  background: var(--c-green);
+  color: var(--c-bg);
+}
 
-        .hero .tagline {
-            font-size: clamp(1.2rem, 2vw, 1.5rem);
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
+/* ========== HERO ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 9rem 3rem 6rem;
+  position: relative;
+  overflow: hidden;
+}
 
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(103,58,183,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(103,58,183,0.07) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 100%);
+}
 
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.hero-glow {
+  position: absolute;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 600px;
+  background: radial-gradient(ellipse, rgba(103,58,183,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(103, 58, 183, 0.5);
-        }
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.1s ease forwards;
+}
 
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text-primary);
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            border: 2px solid var(--primary);
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.eyebrow-line {
+  width: 40px; height: 1px;
+  background: var(--c-green);
+}
 
-        .btn-secondary:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
+.eyebrow-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-green);
+}
 
-        /* Features Section */
-        .features {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  max-width: 900px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.25s ease forwards;
+}
 
-        .section-title {
-            text-align: center;
-            font-size: clamp(2rem, 4vw, 3rem);
-            margin-bottom: 1rem;
-        }
+.hero h1 em {
+  font-style: italic;
+  color: var(--c-purple-light);
+}
 
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            margin-bottom: 4rem;
-        }
+.hero-sub {
+  margin-top: 2.5rem;
+  max-width: 520px;
+  color: var(--c-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s ease forwards;
+}
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
+.hero-pills {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.55s ease forwards;
+}
 
-        .feature-card {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid rgba(103, 58, 183, 0.2);
-            transition: all 0.3s;
-        }
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  border: 1px solid var(--c-border);
+  color: var(--c-muted);
+  background: var(--c-surface);
+}
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px rgba(103, 58, 183, 0.2);
-        }
+.pill.green { border-color: rgba(0,230,118,0.3); color: var(--c-green); background: rgba(0,230,118,0.05); }
 
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.7s ease forwards;
+}
 
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
+.btn-dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--c-purple);
+  color: #fff;
+  padding: 0.9rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
 
-        .feature-card p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
+.btn-dl:hover {
+  background: var(--c-purple-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(103,58,183,0.4);
+}
 
-        /* How It Works */
-        .how-it-works {
-            padding: 6rem 2rem;
-            background: var(--surface);
-        }
+.btn-gh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--c-white);
+  padding: 0.9rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--c-border-light);
+  transition: border-color 0.2s, transform 0.2s;
+}
 
-        .steps-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+.btn-gh:hover {
+  border-color: rgba(240,237,232,0.25);
+  transform: translateY(-2px);
+}
 
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
+.hero-stats {
+  position: absolute;
+  bottom: 3rem; right: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.9s ease forwards;
+}
 
-        .step {
-            text-align: center;
-            padding: 2rem;
-        }
+.hero-stat {
+  text-align: right;
+}
 
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
-        }
+.stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--c-white);
+  line-height: 1;
+}
 
-        .step h3 {
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--c-muted);
+  text-transform: uppercase;
+}
 
-        .step p {
-            color: var(--text-secondary);
-        }
+/* ========== SECTION BASICS ========== */
+section { position: relative; }
 
-        /* Privacy Section */
-        .privacy {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
+.section-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
 
-        .privacy-badge {
-            display: inline-block;
-            background: var(--gradient-secondary);
-            color: var(--background);
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-bottom: 2rem;
-        }
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+  padding: 6rem 0 4rem;
+  border-top: 1px solid var(--c-border);
+}
 
-        .privacy-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--c-purple-light);
+  letter-spacing: 0.15em;
+  padding-top: 0.5rem;
+  flex-shrink: 0;
+  width: 60px;
+}
 
-        .privacy-feature {
-            padding: 1.5rem;
-            background: var(--surface);
-            border-radius: 12px;
-            border: 1px solid rgba(0, 230, 118, 0.2);
-        }
+.section-title-block { flex: 1; }
 
-        .privacy-feature h4 {
-            margin-bottom: 0.5rem;
-            color: var(--secondary);
-        }
+.section-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-green);
+  margin-bottom: 0.75rem;
+}
 
-        /* Download Section */
-        .download {
-            padding: 6rem 2rem;
-            background: var(--surface);
-            text-align: center;
-        }
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
 
-        .download-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+.section-desc {
+  margin-top: 1rem;
+  color: var(--c-muted);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 460px;
+}
 
-        .download-steps {
-            background: var(--background);
-            padding: 2rem;
-            border-radius: 16px;
-            margin-top: 2rem;
-            text-align: left;
-        }
+/* ========== FEATURES ========== */
+#features { background: var(--c-bg); }
 
-        .download-step {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            align-items: flex-start;
-        }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 6rem;
+}
 
-        .download-step:last-child {
-            margin-bottom: 0;
-        }
+.feat {
+  padding: 2rem;
+  border-right: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+  transition: background 0.3s;
+  position: relative;
+}
 
-        .download-step-number {
-            min-width: 30px;
-            height: 30px;
-            background: var(--gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
+.feat:nth-child(4n) { border-right: none; }
+.feat:nth-child(5), .feat:nth-child(6), .feat:nth-child(7), .feat:nth-child(8) { border-bottom: none; }
 
-        /* Footer */
-        footer {
-            background: var(--surface);
-            padding: 3rem 2rem;
-            border-top: 1px solid rgba(103, 58, 183, 0.2);
-        }
+.feat:hover { background: var(--c-surface); }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
+.feat-icon {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--c-border);
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.25rem;
+  background: var(--c-surface);
+  transition: border-color 0.3s, background 0.3s;
+}
 
-        .footer-section h4 {
-            margin-bottom: 1rem;
-            color: var(--primary-light);
-        }
+.feat:hover .feat-icon {
+  border-color: var(--c-purple);
+  background: var(--c-purple-dim);
+}
 
-        .footer-section a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 0.5rem;
-            transition: color 0.3s;
-        }
+.feat-icon svg { width: 20px; height: 20px; }
 
-        .footer-section a:hover {
-            color: var(--primary-light);
-        }
+.feat-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
 
-        .footer-bottom {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(103, 58, 183, 0.2);
-            color: var(--text-tertiary);
-        }
+.feat-desc {
+  font-size: 0.8rem;
+  color: var(--c-muted);
+  line-height: 1.7;
+  font-weight: 400;
+}
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.feat-tag {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--c-green);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
+.feat:hover .feat-tag { opacity: 1; }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
+/* ========== HOW IT WORKS ========== */
+#how-it-works { background: var(--c-surface); }
 
-            .hero {
-                padding: 6rem 1rem 2rem;
-            }
+.steps-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-bottom: 6rem;
+  position: relative;
+}
 
-            .hero-buttons {
-                flex-direction: column;
-            }
+.steps-track::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(12.5% + 14px);
+  right: calc(12.5% + 14px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--c-purple), var(--c-purple-light), var(--c-green));
+}
 
-            .btn-primary, .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
-        }
+.step-item {
+  padding: 0 1.5rem;
+  text-align: center;
+}
 
-        /* Scroll Indicator */
-        .scroll-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: rgba(103, 58, 183, 0.2);
-            z-index: 1001;
-        }
+.step-dot {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--c-surface2);
+  border: 2px solid var(--c-purple);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1.5rem;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--c-purple-light);
+  position: relative;
+  z-index: 2;
+  transition: background 0.3s, border-color 0.3s;
+}
 
-        .scroll-progress {
-            height: 100%;
-            background: var(--gradient);
-            width: 0%;
-            transition: width 0.1s;
-        }
-    </style>
+.step-item:hover .step-dot {
+  background: var(--c-purple-dim);
+  border-color: var(--c-purple-light);
+}
+
+.step-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.step-desc {
+  font-size: 0.78rem;
+  color: var(--c-muted);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* ========== PRIVACY ========== */
+#privacy { background: var(--c-bg); }
+
+.privacy-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  padding-bottom: 6rem;
+}
+
+.privacy-left {}
+
+.privacy-statement {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+.privacy-statement em {
+  font-style: italic;
+  color: var(--c-green);
+}
+
+.privacy-body {
+  color: var(--c-muted);
+  font-size: 0.9rem;
+  line-height: 1.9;
+  font-weight: 400;
+}
+
+.privacy-right {}
+
+.privacy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--c-border);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.prv-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--c-surface);
+  transition: background 0.2s;
+}
+
+.prv-item:hover { background: var(--c-surface2); }
+
+.prv-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(0,230,118,0.12);
+  border: 1px solid rgba(0,230,118,0.3);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.prv-check svg { width: 11px; height: 11px; }
+
+.prv-content {}
+
+.prv-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.prv-desc {
+  font-size: 0.78rem;
+  color: var(--c-muted);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ========== DOWNLOAD / INSTALL ========== */
+#download { background: var(--c-surface); }
+
+.install-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding-bottom: 6rem;
+  align-items: start;
+}
+
+.install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.inst-step {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--c-border-light);
+}
+
+.inst-step:last-child { border-bottom: none; }
+
+.inst-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--c-purple-light);
+  padding-top: 0.1rem;
+  flex-shrink: 0;
+  width: 24px;
+}
+
+.inst-content {}
+
+.inst-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.inst-desc {
+  font-size: 0.8rem;
+  color: var(--c-muted);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.install-right {}
+
+.req-card {
+  background: var(--c-surface2);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.req-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: 1.25rem;
+}
+
+.req-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--c-border-light);
+}
+
+.req-item:last-child { border-bottom: none; }
+
+.req-key { font-size: 0.8rem; color: var(--c-muted); font-weight: 400; }
+
+.req-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--c-white);
+}
+
+.dl-block {
+  background: linear-gradient(135deg, rgba(103,58,183,0.15), rgba(103,58,183,0.05));
+  border: 1px solid var(--c-purple-dim);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.dl-block-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.dl-block-sub {
+  font-size: 0.8rem;
+  color: var(--c-muted);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.btn-dl-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--c-purple);
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  width: 100%;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 0.75rem;
+}
+
+.btn-dl-large:hover {
+  background: var(--c-purple-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(103,58,183,0.4);
+}
+
+.dl-alt {
+  font-size: 0.75rem;
+  color: var(--c-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.dl-alt a { color: var(--c-purple-light); text-decoration: none; }
+.dl-alt a:hover { text-decoration: underline; }
+
+/* ========== CONTACT / FOOTER ========== */
+#contact { background: var(--c-bg); }
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding-bottom: 6rem;
+  align-items: start;
+}
+
+.contact-left {}
+
+.contact-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+
+.contact-body {
+  color: var(--c-muted);
+  font-size: 0.9rem;
+  line-height: 1.9;
+  font-weight: 400;
+  margin-bottom: 2.5rem;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: var(--c-white);
+  padding: 1rem 1.25rem;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 8px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.contact-link:hover {
+  border-color: var(--c-purple);
+  transform: translateX(4px);
+}
+
+.contact-link-icon {
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  background: var(--c-surface2);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.contact-link-icon svg { width: 18px; height: 18px; }
+
+.contact-link-info {}
+
+.contact-link-label {
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.contact-link-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.contact-right {}
+
+.os-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.os-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.os-card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.os-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--c-green);
+  border: 1px solid rgba(0,230,118,0.3);
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+}
+
+.os-card-body {
+  padding: 1.5rem;
+}
+
+.os-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--c-border-light);
+  font-size: 0.8rem;
+}
+
+.os-line:last-child { border-bottom: none; }
+.os-line-key { color: var(--c-muted); font-weight: 400; }
+.os-line-val { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+
+.os-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--c-border);
+  background: var(--c-surface2);
+}
+
+.os-footer a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--c-muted);
+  font-size: 0.78rem;
+  transition: color 0.2s;
+}
+
+.os-footer a:hover { color: var(--c-white); }
+.os-footer svg { width: 14px; height: 14px; }
+
+/* ========== SITE FOOTER ========== */
+.site-footer {
+  border-top: 1px solid var(--c-border);
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-footer-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: var(--c-muted);
+}
+
+.site-footer-legal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--c-muted);
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .feat:nth-child(2n) { border-right: none; }
+  .feat:nth-child(5), .feat:nth-child(6) { border-bottom: 1px solid var(--c-border); }
+  .feat:nth-child(7), .feat:nth-child(8) { border-bottom: none; }
+  .steps-track { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .steps-track::before { display: none; }
+  .privacy-layout, .install-layout, .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 7rem 1.5rem 4rem; }
+  .hero-stats { display: none; }
+  .section-wrap { padding: 0 1.5rem; }
+  .section-header { flex-direction: column; gap: 1rem; padding: 4rem 0 2.5rem; }
+  .section-num { width: auto; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feat { border-right: none !important; }
+  .steps-track { grid-template-columns: 1fr; }
+  .site-footer { flex-direction: column; gap: 1rem; text-align: center; }
+}
+</style>
 </head>
 <body>
-    <!-- Scroll Progress Indicator -->
-    <div class="scroll-indicator">
-        <div class="scroll-progress" id="scrollProgress"></div>
+<div id="sp"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+        <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/>
+        <path d="M20 21a8 8 0 1 0-16 0"/>
+        <circle cx="18" cy="8" r="3" fill="#fff" stroke="none"/>
+      </svg>
+    </div>
+    <span class="nav-brand-name">Confidant AI</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#privacy">Privacy</a></li>
+    <li><a href="#download">Install</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="nav-cta" download>Download APK</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span class="eyebrow-text">100% On-Device · No Cloud · Open Source</span>
+  </div>
+
+  <h1>Your AI.<br><em>Truly</em> private.</h1>
+
+  <p class="hero-sub">
+    Confidant AI runs entirely on your Android device using llama.cpp. Chat naturally, save notes, search the web, and get proactive insights — all while keeping your data completely private and secure on your phone.
+  </p>
+
+  <div class="hero-pills">
+    <span class="pill green">On-Device Processing</span>
+    <span class="pill">Telegram Integration</span>
+    <span class="pill">Web Search</span>
+    <span class="pill">Android 8.0+</span>
+    <span class="pill">Apache 2.0</span>
+  </div>
+
+  <div class="hero-actions">
+    <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="btn-dl" download="confidant-ai-v1.0.0-1-release.apk">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download APK
+    </a>
+    <a href="https://github.com/2796gaurav/confidant.ai" class="btn-gh" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      View Source Code
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Data Collected</div>
+    </div>
+    <div class="hero-stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">On-Device</div>
+    </div>
+    <div class="hero-stat">
+      <div class="stat-num">~2 GB</div>
+      <div class="stat-label">Model Size</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section id="demo-section" style="background: var(--c-surface); padding: 6rem 0;">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-num">01</div>
+      <div class="section-title-block">
+        <div class="section-kicker">Interactive Demo</div>
+        <h2 class="section-title">See it in action.<br>Try real examples.</h2>
+        <p class="section-desc">Experience Confidant AI's capabilities through interactive conversations. Click examples to see how it handles different tasks.</p>
+      </div>
+    </div>
+    <div class="reveal" style="margin-bottom: 6rem;">
+      <!-- Demo will be injected here by demo.js -->
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-num">02</div>
+      <div class="section-title-block">
+        <div class="section-kicker">Capabilities</div>
+        <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+        <p class="section-desc">A full-featured AI companion that respects your intelligence and your privacy. Every feature engineered for on-device operation.</p>
+      </div>
     </div>
 
-    <!-- Header -->
-    <header>
-        <nav>
-            <a href="#" class="logo">
-                <img src="assets/logo.svg" alt="Confidant AI" style="width: 40px; height: 40px; border-radius: 10px;">
-                <span>Confidant AI</span>
+    <div class="features-grid reveal">
+      <!-- 1 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="feat-name">100% On-Device</div>
+        <div class="feat-desc">All inference runs locally using llama.cpp. No server calls, no data egress. Works offline.</div>
+        <div class="feat-tag">CORE</div>
+      </div>
+      <!-- 2 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feat-name">Privacy First</div>
+        <div class="feat-desc">No names, no personal identifiers collected. Open source code available for full audit.</div>
+        <div class="feat-tag">CORE</div>
+      </div>
+      <!-- 3 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="feat-name">Telegram Integration</div>
+        <div class="feat-desc">Chat through Telegram for a familiar interface. Receive instant responses and proactive notifications.</div>
+        <div class="feat-tag">UI</div>
+      </div>
+      <!-- 4 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="feat-name">Smart Web Search</div>
+        <div class="feat-desc">DuckDuckGo-powered search with intelligent query handling. Only search queries leave your device.</div>
+        <div class="feat-tag">TOOL</div>
+      </div>
+      <!-- 5 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="feat-name">Proactive Intelligence</div>
+        <div class="feat-desc">Learns context from your notifications and conversations to offer relevant, timely insights.</div>
+        <div class="feat-tag">AI</div>
+      </div>
+      <!-- 6 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </div>
+        <div class="feat-name">Sleep Mode</div>
+        <div class="feat-desc">Configurable quiet hours prevent disturbances during rest. Conserves battery intelligently.</div>
+        <div class="feat-tag">UX</div>
+      </div>
+      <!-- 7 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="feat-name">Background Processing</div>
+        <div class="feat-desc">Runs as a persistent foreground service. Continues working when the app is closed or screen is off.</div>
+        <div class="feat-tag">SYS</div>
+      </div>
+      <!-- 8 -->
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+        </div>
+        <div class="feat-name">Thermal Management</div>
+        <div class="feat-desc">Monitors device temperature and adapts inference threads. Optimized for sustained performance.</div>
+        <div class="feat-tag">SYS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-num">03</div>
+      <div class="section-title-block">
+        <div class="section-kicker">Onboarding</div>
+        <h2 class="section-title">Up and running<br>in minutes.</h2>
+        <p class="section-desc">Four straightforward steps from download to your first conversation. No accounts, no subscriptions, no cloud setup required.</p>
+      </div>
+    </div>
+
+    <div class="steps-track reveal">
+      <div class="step-item">
+        <div class="step-dot">1</div>
+        <div class="step-title">Download & Install</div>
+        <div class="step-desc">Download the APK from GitHub Releases. Enable installation from unknown sources in Android Settings and install the app.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">2</div>
+        <div class="step-title">Complete Setup</div>
+        <div class="step-desc">Enter your interests, connect your Telegram bot token, configure sleep mode hours, and grant the necessary permissions.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">3</div>
+        <div class="step-title">Download Model</div>
+        <div class="step-desc">From the Dashboard, tap "Download Model Now." The AI model is ~2 GB. A WiFi connection is strongly recommended.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot">4</div>
+        <div class="step-title">Start Chatting</div>
+        <div class="step-desc">Tap "Start Server" on the Dashboard, then open Telegram and begin your first conversation with your AI companion.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section id="privacy">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-num">04</div>
+      <div class="section-title-block">
+        <div class="section-kicker">Privacy Architecture</div>
+        <h2 class="section-title">Your data never<br>leaves the device.</h2>
+      </div>
+    </div>
+
+    <div class="privacy-layout reveal">
+      <div class="privacy-left">
+        <p class="privacy-statement">
+          Privacy isn't a feature — it's the <em>foundation</em> every decision is built on.
+        </p>
+        <p class="privacy-body">
+          Confidant AI was designed from the ground up with a single architectural constraint: no personal data, no conversation history, no inferences about you should ever be transmitted to a third-party server. The only external network calls the app makes are your deliberate web searches via DuckDuckGo — and that's it.<br><br>
+          The full source code is publicly available on GitHub. Read it, audit it, compile it yourself.
+        </p>
+      </div>
+      <div class="privacy-right">
+        <div class="privacy-list">
+          <div class="prv-item">
+            <div class="prv-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div class="prv-content">
+              <div class="prv-title">100% Local Storage</div>
+              <div class="prv-desc">All conversation and preference data lives only on your device. No syncing to external servers.</div>
+            </div>
+          </div>
+          <div class="prv-item">
+            <div class="prv-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div class="prv-content">
+              <div class="prv-title">No Personal Identifiers</div>
+              <div class="prv-desc">We do not collect names, gender, device IDs, or any personally identifiable information.</div>
+            </div>
+          </div>
+          <div class="prv-item">
+            <div class="prv-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div class="prv-content">
+              <div class="prv-title">Open Source & Auditable</div>
+              <div class="prv-desc">Every line of code is public. Trust the engineering, not our word.</div>
+            </div>
+          </div>
+          <div class="prv-item">
+            <div class="prv-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div class="prv-content">
+              <div class="prv-title">Zero Analytics & Telemetry</div>
+              <div class="prv-desc">No crash reporters, no usage analytics, no A/B testing frameworks. Nothing.</div>
+            </div>
+          </div>
+          <div class="prv-item">
+            <div class="prv-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div class="prv-content">
+              <div class="prv-title">Encrypted Storage (Android 9+)</div>
+              <div class="prv-desc">All local data is encrypted at rest on Android 9 and above. Never readable from other apps.</div>
+            </div>
+          </div>
+          <div class="prv-item">
+            <div class="prv-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <div class="prv-content">
+              <div class="prv-title">Web Search Isolation</div>
+              <div class="prv-desc">Only explicit web search queries leave the device. No conversation context is attached.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD / INSTALL -->
+<section id="download">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-num">05</div>
+      <div class="section-title-block">
+        <div class="section-kicker">Installation</div>
+        <h2 class="section-title">Step-by-step<br>install guide.</h2>
+        <p class="section-desc">Android requires a few extra taps to install apps outside the Play Store. Here's exactly what to do.</p>
+      </div>
+    </div>
+
+    <div class="install-layout reveal">
+      <div class="install-steps">
+        <div class="inst-step">
+          <div class="inst-num">01</div>
+          <div class="inst-content">
+            <div class="inst-title">Download the APK</div>
+            <div class="inst-desc">Click the download button and save <code style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--c-purple-light)">confidant-ai-v1.0.0-1-release.apk</code> to your Android device. You can also find all releases on GitHub.</div>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">02</div>
+          <div class="inst-content">
+            <div class="inst-title">Enable Unknown Sources</div>
+            <div class="inst-desc">Navigate to Settings → Security → Install Unknown Apps (or "Install from Unknown Sources"). Enable this for your browser or file manager.</div>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">03</div>
+          <div class="inst-content">
+            <div class="inst-title">Install the APK</div>
+            <div class="inst-desc">Open the downloaded APK file from your notifications or file manager. Tap "Install" and follow the on-screen prompts. Grant all requested permissions.</div>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">04</div>
+          <div class="inst-content">
+            <div class="inst-title">Complete Onboarding</div>
+            <div class="inst-desc">Launch Confidant AI. Enter your interests, connect your Telegram bot by pasting your bot token, set sleep mode hours, and grant notification access.</div>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">05</div>
+          <div class="inst-content">
+            <div class="inst-title">Download the AI Model</div>
+            <div class="inst-desc">From the Dashboard, tap "Download Model Now." The model is approximately 2 GB. Connect to WiFi before starting to avoid mobile data charges.</div>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">06</div>
+          <div class="inst-content">
+            <div class="inst-title">Start Chatting</div>
+            <div class="inst-desc">Once the model is downloaded, tap "Start Server" on the Dashboard. Open Telegram, find your bot, and send your first message.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-right">
+        <div class="req-card">
+          <div class="req-title">System Requirements</div>
+          <div class="req-item">
+            <span class="req-key">Android Version</span>
+            <span class="req-val">8.0 (API 26)+</span>
+          </div>
+          <div class="req-item">
+            <span class="req-key">RAM</span>
+            <span class="req-val">4 GB recommended</span>
+          </div>
+          <div class="req-item">
+            <span class="req-key">Storage</span>
+            <span class="req-val">3 GB free space</span>
+          </div>
+          <div class="req-item">
+            <span class="req-key">Network</span>
+            <span class="req-val">WiFi (model download)</span>
+          </div>
+          <div class="req-item">
+            <span class="req-key">Encryption</span>
+            <span class="req-val">Android 9+ (at rest)</span>
+          </div>
+          <div class="req-item">
+            <span class="req-key">Architecture</span>
+            <span class="req-val">ARM64 / x86_64</span>
+          </div>
+        </div>
+
+        <div class="dl-block">
+          <div class="dl-block-title">Confidant AI v1.0.0</div>
+          <div class="dl-block-sub">Production release · Android APK</div>
+          <a href="https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk" class="btn-dl-large" download="confidant-ai-v1.0.0-1-release.apk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download APK
+          </a>
+          <div class="dl-alt">
+            Or view <a href="https://github.com/2796gaurav/confidant.ai/releases" target="_blank" rel="noopener">all releases on GitHub →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-num">06</div>
+      <div class="section-title-block">
+        <div class="section-kicker">Get in Touch</div>
+        <h2 class="section-title">Built in the open.<br>Questions welcome.</h2>
+      </div>
+    </div>
+
+    <div class="contact-layout reveal">
+      <div class="contact-left">
+        <p class="contact-headline">Bug report, feature request, or just curious how it works?</p>
+        <p class="contact-body">
+          Confidant AI is an open source project built with care. Reach out via email, connect on LinkedIn, or open an issue directly on GitHub. Every message is read.
+        </p>
+
+        <div class="contact-links">
+          <a href="mailto:gauravc2708@gmail.com" class="contact-link">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Email</div>
+              <div class="contact-link-value">gauravc2708@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="https://www.linkedin.com/in/gauravc2708/" class="contact-link" target="_blank" rel="noopener">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24" fill="#8B5CF6" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">LinkedIn</div>
+              <div class="contact-link-value">Gaurav Chauhan</div>
+            </div>
+          </a>
+
+          <a href="https://github.com/2796gaurav/confidant.ai/issues" class="contact-link" target="_blank" rel="noopener">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24" fill="#8B5CF6" width="18" height="18"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">GitHub Issues</div>
+              <div class="contact-link-value">Report a bug or request a feature</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-right">
+        <div class="os-card">
+          <div class="os-card-header">
+            <span class="os-card-title">github.com/2796gaurav/confidant.ai</span>
+            <span class="os-badge">OPEN SOURCE</span>
+          </div>
+          <div class="os-card-body">
+            <div class="os-line">
+              <span class="os-line-key">License</span>
+              <span class="os-line-val">Apache 2.0</span>
+            </div>
+            <div class="os-line">
+              <span class="os-line-key">Language</span>
+              <span class="os-line-val">Kotlin / Jetpack Compose</span>
+            </div>
+            <div class="os-line">
+              <span class="os-line-key">AI Runtime</span>
+              <span class="os-line-val">llama.cpp</span>
+            </div>
+            <div class="os-line">
+              <span class="os-line-key">Interface</span>
+              <span class="os-line-val">Telegram Bot API</span>
+            </div>
+            <div class="os-line">
+              <span class="os-line-key">Search</span>
+              <span class="os-line-val">DuckDuckGo</span>
+            </div>
+            <div class="os-line">
+              <span class="os-line-key">Version</span>
+              <span class="os-line-val">v1.0.0-1</span>
+            </div>
+          </div>
+          <div class="os-footer">
+            <a href="https://github.com/2796gaurav/confidant.ai" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              View Repository
             </a>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#privacy">Privacy</a></li>
-                <li><a href="#download">Download</a></li>
-            </ul>
-            <a href="#download" class="cta-button">Get Started</a>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content fade-in-up">
-            <img src="assets/logo.svg" alt="Confidant AI Logo" style="width: 150px; height: 150px; margin-bottom: 2rem; filter: drop-shadow(0 10px 30px rgba(103, 58, 183, 0.3));">
-            <h1>Confidant AI</h1>
-            <p class="tagline">Your Privacy-First AI Companion</p>
-            <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 1rem;">
-                100% On-Device • No Cloud • Complete Privacy
-            </p>
-            <div class="hero-buttons">
-                <a href="https://github.com/2796gaurav/confidant.ai/releases" class="btn-primary" target="_blank">
-                    📱 Download APK
-                </a>
-                <a href="https://github.com/2796gaurav/confidant.ai" class="btn-secondary" target="_blank">
-                    💻 View Source Code
-                </a>
-            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <h2 class="section-title">Powerful Features</h2>
-        <p class="section-subtitle">Everything you need in a privacy-first AI assistant</p>
-        
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>100% On-Device</h3>
-                <p>All AI processing happens locally on your device. No cloud servers, no data collection, complete privacy.</p>
-            </div>
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <span class="site-footer-brand">Confidant AI</span>
+  <span class="site-footer-legal">© 2026 · Made for privacy-conscious users · <a href="https://github.com/2796gaurav/confidant.ai/blob/main/LICENSE" target="_blank" style="color:var(--c-muted);text-decoration:none">Apache 2.0</a></span>
+</footer>
 
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <h3>Privacy First</h3>
-                <p>We don't collect names, gender, or personal identifiers. Your data stays on your device. Open source code available.</p>
-            </div>
+<script>
+  // Scroll progress
+  const sp = document.getElementById('sp');
+  window.addEventListener('scroll', () => {
+    const p = window.scrollY / (document.body.offsetHeight - window.innerHeight) * 100;
+    sp.style.width = p + '%';
+  }, { passive: true });
 
-            <div class="feature-card">
-                <div class="feature-icon">💬</div>
-                <h3>Telegram Integration</h3>
-                <p>Chat with your AI companion through Telegram. Get instant responses and proactive notifications.</p>
-            </div>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (i * 0.05) + 's';
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-            <div class="feature-card">
-                <div class="feature-icon">🔍</div>
-                <h3>Smart Web Search</h3>
-                <p>Integrated DuckDuckGo search with intelligent query handling for accurate, up-to-date information.</p>
-            </div>
+  reveals.forEach(el => io.observe(el));
 
-            <div class="feature-card">
-                <div class="feature-icon">🧠</div>
-                <h3>Intelligent & Proactive</h3>
-                <p>Learns from your notifications and conversations to provide contextual assistance and proactive insights.</p>
-            </div>
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
 
-            <div class="feature-card">
-                <div class="feature-icon">🌙</div>
-                <h3>Sleep Mode</h3>
-                <p>Conserve battery and prevent disturbances during your rest hours with configurable sleep mode.</p>
-            </div>
+<!-- Demo Script -->
+<script src="demo.js"></script>
 
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Background Processing</h3>
-                <p>Continues working even when the app is closed. 24/7 intelligent assistance.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🌡️</div>
-                <h3>Thermal Management</h3>
-                <p>Adaptive performance based on device temperature. Optimized for battery life.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section id="how-it-works" class="how-it-works">
-        <div class="steps-container">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Get started in minutes</p>
-            
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Download & Install</h3>
-                    <p>Download the APK from GitHub releases and install on your Android device (Android 8.0+)</p>
-                </div>
-
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Complete Setup</h3>
-                    <p>Enter your interests, connect Telegram bot, configure sleep mode, and grant permissions</p>
-                </div>
-
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Download Model</h3>
-                    <p>Download the AI model (~2GB) from the Dashboard. Use WiFi for faster download.</p>
-                </div>
-
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Start Chatting</h3>
-                    <p>Start the AI server and begin chatting with your companion on Telegram!</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Privacy Section -->
-    <section id="privacy" class="privacy">
-        <div class="privacy-badge">🔒 Privacy Guaranteed</div>
-        <h2 class="section-title">Your Data, Your Device</h2>
-        <p class="section-subtitle">We take privacy seriously. Here's what that means:</p>
-        
-        <div class="privacy-features">
-            <div class="privacy-feature">
-                <h4>✅ 100% Local Storage</h4>
-                <p>All data stored on your device. No cloud servers involved.</p>
-            </div>
-
-            <div class="privacy-feature">
-                <h4>✅ No Data Collection</h4>
-                <p>We don't collect names, gender, or personal identifiers.</p>
-            </div>
-
-            <div class="privacy-feature">
-                <h4>✅ Open Source</h4>
-                <p>Full source code available for audit at github.com/2796gaurav/confidant.ai</p>
-            </div>
-
-            <div class="privacy-feature">
-                <h4>✅ No Tracking</h4>
-                <p>No analytics, no telemetry, no tracking. Just pure AI assistance.</p>
-            </div>
-
-            <div class="privacy-feature">
-                <h4>✅ Encrypted Storage</h4>
-                <p>All data encrypted at rest (Android 9+). Never leaves your device.</p>
-            </div>
-
-            <div class="privacy-feature">
-                <h4>✅ Web Search Only</h4>
-                <p>Only web search queries are sent externally. All AI processing is local.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Download Section -->
-    <section id="download" class="download">
-        <div class="download-content">
-            <h2 class="section-title">Download Confidant AI</h2>
-            <p class="section-subtitle">Get started with your privacy-first AI companion</p>
-            
-            <div style="margin-top: 2rem;">
-                <a href="https://github.com/2796gaurav/confidant.ai/releases" class="btn-primary" target="_blank" style="font-size: 1.3rem; padding: 1.2rem 2.5rem;">
-                    📱 Download APK Now
-                </a>
-            </div>
-
-            <div class="download-steps">
-                <h3 style="margin-bottom: 1.5rem; color: var(--primary-light);">Download Instructions:</h3>
-                
-                <div class="download-step">
-                    <div class="download-step-number">1</div>
-                    <div>
-                        <strong>Click the Download Button</strong>
-                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                            This will take you to the GitHub Releases page where you can download the latest APK.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="download-step">
-                    <div class="download-step-number">2</div>
-                    <div>
-                        <strong>Enable Unknown Sources</strong>
-                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                            On your Android device, go to Settings → Security → Enable "Install from Unknown Sources" or "Install Unknown Apps" for your browser.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="download-step">
-                    <div class="download-step-number">3</div>
-                    <div>
-                        <strong>Install the APK</strong>
-                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                            Open the downloaded APK file and follow the installation prompts. Grant all required permissions when prompted.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="download-step">
-                    <div class="download-step-number">4</div>
-                    <div>
-                        <strong>Complete Onboarding</strong>
-                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                            Launch the app and complete the setup process: enter interests, connect Telegram, configure sleep mode, and grant permissions.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="download-step">
-                    <div class="download-step-number">5</div>
-                    <div>
-                        <strong>Download AI Model</strong>
-                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                            Go to Dashboard and tap "DOWNLOAD MODEL NOW". Wait for download to complete (~2GB, WiFi recommended).
-                        </p>
-                    </div>
-                </div>
-
-                <div class="download-step">
-                    <div class="download-step-number">6</div>
-                    <div>
-                        <strong>Start Using</strong>
-                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                            Tap "Start Server" on Dashboard, then open Telegram and start chatting with your bot!
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 3rem; padding: 2rem; background: var(--surface); border-radius: 16px;">
-                <h3 style="margin-bottom: 1rem; color: var(--primary-light);">System Requirements</h3>
-                <ul style="text-align: left; color: var(--text-secondary); line-height: 2;">
-                    <li>Android 8.0 (API 26) or higher</li>
-                    <li>4GB+ RAM recommended</li>
-                    <li>3GB+ free storage space (for AI model)</li>
-                    <li>Internet connection for initial setup and web search</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Confidant AI</h4>
-                <p style="color: var(--text-secondary);">
-                    Your Privacy-First AI Companion. 100% On-Device • No Cloud • Complete Privacy
-                </p>
-            </div>
-
-            <div class="footer-section">
-                <h4>Links</h4>
-                <a href="https://github.com/2796gaurav/confidant.ai" target="_blank">GitHub Repository</a>
-                <a href="https://github.com/2796gaurav/confidant.ai/releases" target="_blank">Download APK</a>
-                <a href="http://2796gaurav.github.io/confidantai" target="_blank">Website</a>
-            </div>
-
-            <div class="footer-section">
-                <h4>Resources</h4>
-                <a href="https://github.com/2796gaurav/confidant.ai/blob/main/README.md" target="_blank">Documentation</a>
-                <a href="https://github.com/2796gaurav/confidant.ai/issues" target="_blank">Report Issues</a>
-                <a href="https://github.com/2796gaurav/confidant.ai/blob/main/LICENSE" target="_blank">License</a>
-            </div>
-
-            <div class="footer-section">
-                <h4>Technology</h4>
-                <a href="https://github.com/ggerganov/llama.cpp" target="_blank">llama.cpp</a>
-                <a href="https://core.telegram.org/bots/api" target="_blank">Telegram Bot API</a>
-                <a href="https://developer.android.com/jetpack/compose" target="_blank">Jetpack Compose</a>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 Confidant AI. Made with ❤️ for Privacy-Conscious Users.</p>
-            <p style="margin-top: 0.5rem;">
-                Source Code: <a href="https://github.com/2796gaurav/confidant.ai" target="_blank" style="color: var(--primary-light);">github.com/2796gaurav/confidant.ai</a>
-            </p>
-        </div>
-    </footer>
-
-    <script>
-        // Scroll Progress Indicator
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset;
-            const docHeight = document.body.offsetHeight - window.innerHeight;
-            const scrollPercent = (scrollTop / docHeight) * 100;
-            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Fade in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.feature-card, .step, .privacy-feature').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            observer.observe(el);
-        });
-    </script>
 </body>
 </html>
