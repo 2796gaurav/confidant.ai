@@ -65,7 +65,7 @@
    ```
 
 2. **Download APK**
-   - Download the latest production APK: [confidant-ai-v1.0.0-1-release.apk](https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk)
+   - Download the latest production APK: [confidant-ai-v1.0.0-1-release.apk](https://github.com/2796gaurav/confidant.ai/raw/main/releases/confidant-ai-v1.0.0-1-release.apk)
    - Or visit the [Releases](https://github.com/2796gaurav/confidant.ai/releases) page
    - Install on your Android device
 
@@ -450,7 +450,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - 🔗 **Repository**: [https://github.com/2796gaurav/confidant.ai](https://github.com/2796gaurav/confidant.ai)
 - 🌐 **Website**: [https://2796gaurav.github.io/confidant.ai](https://2796gaurav.github.io/confidant.ai)
-- 📱 **Download APK**: [Latest Release](https://github.com/2796gaurav/confidant.ai/releases/download/v1.0.0/confidant-ai-v1.0.0-1-release.apk) | [All Releases](https://github.com/2796gaurav/confidant.ai/releases)
+- 📱 **Download APK**: [Latest Release](https://github.com/2796gaurav/confidant.ai/raw/main/releases/confidant-ai-v1.0.0-1-release.apk) | [All Releases](https://github.com/2796gaurav/confidant.ai/releases)
 
 ---
 
